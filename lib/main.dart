@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
       ),
       home: SplashScreen(
         nextPage: OnboardingScreen(
-          nextPage: const MyHomePage(title: 'SociaaNet'),
+          nextPage: const LoginScreen(),
         ),
       ),
     );
