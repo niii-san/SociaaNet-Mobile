@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'feed_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -70,11 +71,10 @@ class _LoginScreenState extends State<LoginScreen>
           _isLoading = false;
         });
 
-        // TODO: Navigate to home screen after successful login
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login functionality coming soon!'),
-            backgroundColor: Color(0xFF667eea),
+        // Navigate to feed screen after successful login
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const FeedScreen(),
           ),
         );
       }
