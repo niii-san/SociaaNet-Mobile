@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
-import 'home_screen.dart';
+import 'main_navigation_shell.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen>
         // Navigate to feed screen after successful login
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const FeedScreen(),
+            builder: (context) => const MainNavigationShell(),
           ),
         );
       }
