@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
-import 'feed_screen.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -203,12 +203,12 @@ class _LoginScreenState extends State<LoginScreen>
                                   ),
                                 ),
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your email';
-                                  }
-                                  if (!value.contains('@')) {
-                                    return 'Please enter a valid email';
-                                  }
+                                  // if (value == null || value.isEmpty) {
+                                  //   return 'Please enter your email';
+                                  // }
+                                  // if (!value.contains('@')) {
+                                  //   return 'Please enter a valid email';
+                                  // }
                                   return null;
                                 },
                               ),
@@ -260,12 +260,12 @@ class _LoginScreenState extends State<LoginScreen>
                                   ),
                                 ),
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  if (value.length < 6) {
-                                    return 'Password must be at least 6 characters';
-                                  }
+                                  // if (value == null || value.isEmpty) {
+                                  //   return 'Please enter your password';
+                                  // }
+                                  // if (value.length < 6) {
+                                  //   return 'Password must be at least 6 characters';
+                                  // }
                                   return null;
                                 },
                               ),
