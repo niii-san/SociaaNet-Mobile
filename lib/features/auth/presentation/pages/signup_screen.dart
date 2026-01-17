@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sociaanet/features/auth/presentation/state/auth_state.dart';
+import 'package:sociaanet/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen>
+class _SignupScreenState extends ConsumerState<SignupScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
@@ -16,7 +19,6 @@ class _SignupScreenState extends State<SignupScreen>
   final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  bool _isLoading = false;
   bool _agreeToTerms = false;
 
   late AnimationController _animationController;
@@ -73,31 +75,44 @@ class _SignupScreenState extends State<SignupScreen>
     }
 
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      debugPrint('🚀 Signup started...');
+      
+      final success = await ref.read(authViewModelProvider.notifier).signup(
+            fullName: _fullNameController.text.trim(),
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
 
-      // Simulate signup process
-      await Future.delayed(const Duration(seconds: 2));
+      debugPrint('📦 Signup result: $success');
 
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        if (success) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account created successfully! Please login.'),
+              backgroundColor: Color(0xFF667eea),
+            ),
+          );
 
-        // Navigate to login screen after successful signup
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account created successfully! Please login.'),
-            backgroundColor: Color(0xFF667eea),
-          ),
-        );
-
-        // Navigate to login screen
-        Navigator.of(context).pop();
+          // Navigate back to login screen
+          Navigator.of(context).pop();
+        } else {
+          // Show error message
+          final errorMessage = ref.read(authViewModelProvider).errorMessage;
+          debugPrint('❌ Signup error: $errorMessage');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage ?? 'Signup failed. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }
+
+  bool get _isLoading => ref.watch(authViewModelProvider).status == AuthStatus.loading;
 
   @override
   Widget build(BuildContext context) {
