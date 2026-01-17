@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sociaanet/features/auth/presentation/state/auth_state.dart';
+import 'package:sociaanet/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'signup_screen.dart';
-import 'main_navigation_shell.dart';
+import '../../../../app/screens/main_navigation_shell.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _isLoading = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -59,27 +61,39 @@ class _LoginScreenState extends State<LoginScreen>
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      debugPrint('🚀 Login started...');
 
-      // Simulate login process
-      await Future.delayed(const Duration(seconds: 2));
+      final success = await ref.read(authViewModelProvider.notifier).login(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
+
+      debugPrint('📦 Login result: $success');
 
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-
-        // Navigate to feed screen after successful login
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const MainNavigationShell(),
-          ),
-        );
+        if (success) {
+          // Navigate to main screen after successful login
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const MainNavigationShell(),
+            ),
+          );
+        } else {
+          // Show error message
+          final errorMessage = ref.read(authViewModelProvider).errorMessage;
+          debugPrint('❌ Login error: $errorMessage');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage ?? 'Login failed. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }
+
+  bool get _isLoading => ref.watch(authViewModelProvider).status == AuthStatus.loading;
 
   @override
   Widget build(BuildContext context) {

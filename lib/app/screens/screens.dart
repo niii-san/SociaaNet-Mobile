@@ -2,10 +2,10 @@
 /// Export all screen files from here for easy imports
 library;
 
-export 'splash_screen.dart';
+export '../../features/auth/presentation/pages/splash_screen.dart';
 export 'onboarding_screen.dart';
-export 'login_screen.dart';
-export 'signup_screen.dart';
+export '../../features/auth/presentation/pages/login_screen.dart';
+export '../../features/auth/presentation/pages/signup_screen.dart';
 export 'main_navigation_shell.dart';
 export 'home_feed_screen.dart';
 export 'search_screen.dart';
