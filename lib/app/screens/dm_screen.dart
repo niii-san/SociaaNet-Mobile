@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
@@ -52,7 +53,7 @@ class DirectMessagesScreen extends StatelessWidget {
         onPressed: () {
           // TODO: Start new conversation
         },
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: AppColors.primary,
         child: const Icon(Icons.edit, color: Colors.white),
       ),
     );
@@ -121,7 +122,7 @@ class _ConversationTile extends StatelessWidget {
             '${index + 1}h ago',
             style: TextStyle(
               fontSize: 12,
-              color: hasUnread ? const Color(0xFF667eea) : Colors.grey.shade500,
+              color: hasUnread ? AppColors.primary : Colors.grey.shade500,
             ),
           ),
           if (hasUnread)
@@ -130,7 +131,7 @@ class _ConversationTile extends StatelessWidget {
               width: 10,
               height: 10,
               decoration: const BoxDecoration(
-                color: Color(0xFF667eea),
+                color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
             ),

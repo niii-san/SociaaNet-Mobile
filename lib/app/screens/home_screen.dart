@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _FeedScreenState extends State<FeedScreen> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
-            color: Color(0xFF667eea),
+            color: AppColors.primary,
           ),
         ),
         actions: [
@@ -79,7 +80,7 @@ class _FeedScreenState extends State<FeedScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF667eea),
+        selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -142,7 +143,7 @@ class _StoryItem extends StatelessWidget {
                       ? null
                       : const LinearGradient(
                           colors: [
-                            Color(0xFF667eea),
+                            AppColors.primary,
                             Color(0xFFf093fb),
                           ],
                         ),
@@ -170,7 +171,7 @@ class _StoryItem extends StatelessWidget {
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF667eea),
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
@@ -289,7 +290,7 @@ class _PostItemState extends State<_PostItem> {
               IconButton(
                 icon: Icon(
                   isLiked ? Icons.favorite : Icons.favorite_outline,
-                  color: isLiked ? Colors.red : Colors.black87,
+                  color: isLiked ? AppColors.error : Colors.black87,
                 ),
                 onPressed: () {
                   setState(() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sociaanet/core/constants/app_color.dart';
 
 /// Bottom navigation bar items enum for type safety
 enum NavItem { home, search, post, dm, profile }
@@ -18,10 +19,10 @@ class SociaaNetBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: AppColors.shadowLight,
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -66,12 +67,10 @@ class _NavItemWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-            ),
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(Icons.add, color: Colors.white, size: 26),
+          child: const Icon(Icons.add, color: AppColors.textOnPrimary, size: 26),
         ),
       );
     }
@@ -83,7 +82,7 @@ class _NavItemWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Icon(
           _getIcon(item, isSelected),
-          color: isSelected ? const Color(0xFF667eea) : Colors.grey.shade600,
+          color: isSelected ? AppColors.primary : AppColors.textTertiary,
           size: 28,
         ),
       ),

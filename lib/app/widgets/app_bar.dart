@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sociaanet/core/constants/app_color.dart';
 
 /// Custom AppBar widget for consistent styling across the app
 class SociaaNetAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,17 +21,17 @@ class SociaaNetAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface,
       elevation: 0,
       scrolledUnderElevation: 0.5,
-      surfaceTintColor: Colors.white,
+      surfaceTintColor: AppColors.surface,
       leading: leading,
       centerTitle: centerTitle,
       title: showLogo ? _buildLogo() : _buildTitle(),
       actions: actions,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(color: Colors.grey.shade200, height: 1),
+        child: Container(color: AppColors.divider, height: 1),
       ),
     );
   }
@@ -39,18 +40,13 @@ class SociaaNetAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ).createShader(bounds),
-          child: const Text(
-            'SociaaNet',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 26,
-              color: Colors.white,
-              letterSpacing: -0.5,
-            ),
+        Text(
+          'SociaaNet',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 26,
+            color: AppColors.primary,
+            letterSpacing: -0.5,
           ),
         ),
       ],
@@ -64,7 +60,7 @@ class SociaaNetAppBar extends StatelessWidget implements PreferredSizeWidget {
       style: const TextStyle(
         fontWeight: FontWeight.w600,
         fontSize: 18,
-        color: Colors.black87,
+        color: AppColors.textPrimary,
       ),
     );
   }
@@ -91,7 +87,7 @@ class NotificationIconButton extends StatelessWidget {
         IconButton(
           icon: const Icon(
             Icons.notifications_outlined,
-            color: Colors.black87,
+            color: AppColors.textPrimary,
             size: 26,
           ),
           onPressed: onPressed,
@@ -103,14 +99,14 @@ class NotificationIconButton extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: const BoxDecoration(
-                color: Color(0xFF667eea),
+                color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
               constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
               child: Text(
                 notificationCount > 9 ? '9+' : notificationCount.toString(),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textOnPrimary,
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),

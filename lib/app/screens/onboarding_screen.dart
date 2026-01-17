@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -20,8 +21,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       description:
           'Follow your friends and discover new connections. Share moments and stay updated with people who matter most.',
       gradientColors: [
-        const Color(0xFF667eea),
-        const Color(0xFF764ba2),
+        AppColors.primary,
+        AppColors.primaryLight,
       ],
     ),
     OnboardingData(
@@ -30,8 +31,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       description:
           'Capture and share your best moments with stunning photos and videos. Express yourself creatively.',
       gradientColors: [
-        const Color(0xFFf093fb),
-        const Color(0xFFf5576c),
+        AppColors.primary,
+        AppColors.primaryLight,
       ],
     ),
     OnboardingData(
@@ -40,8 +41,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       description:
           'Discover trending content, explore new ideas, and get inspired by the community around you.',
       gradientColors: [
-        const Color(0xFF4facfe),
-        const Color(0xFF00f2fe),
+        AppColors.primary,
+        AppColors.primaryLight,
       ],
     ),
   ];
@@ -154,7 +155,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       onPressed: _navigateToNext,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF667eea),
+                        foregroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),

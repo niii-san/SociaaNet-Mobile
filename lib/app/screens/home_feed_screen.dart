@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
@@ -82,7 +83,7 @@ class _StoryItem extends StatelessWidget {
                   gradient: isOwn
                       ? null
                       : const LinearGradient(
-                          colors: [Color(0xFF667eea), Color(0xFFf093fb)],
+                          colors: [AppColors.primary, Color(0xFFf093fb)],
                         ),
                   border: isOwn
                       ? Border.all(color: Colors.grey.shade300, width: 2)
@@ -110,7 +111,7 @@ class _StoryItem extends StatelessWidget {
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF667eea),
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
@@ -221,7 +222,7 @@ class _PostItemState extends State<_PostItem> {
               IconButton(
                 icon: Icon(
                   isLiked ? Icons.favorite : Icons.favorite_outline,
-                  color: isLiked ? Colors.red : Colors.black87,
+                  color: isLiked ? AppColors.error : Colors.black87,
                 ),
                 onPressed: () {
                   setState(() {

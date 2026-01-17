@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -61,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
-                          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                          colors: [AppColors.primary, AppColors.primaryLight],
                         ),
                       ),
                       child: Container(
@@ -155,9 +156,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               delegate: _SliverTabBarDelegate(
                 TabBar(
                   controller: _tabController,
-                  indicatorColor: const Color(0xFF667eea),
+                  indicatorColor: AppColors.primary,
                   indicatorWeight: 2,
-                  labelColor: const Color(0xFF667eea),
+                  labelColor: AppColors.primary,
                   unselectedLabelColor: Colors.grey.shade400,
                   tabs: const [
                     Tab(icon: Icon(Icons.grid_on_rounded)),
@@ -308,7 +309,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         decoration: BoxDecoration(
           gradient: isPrimary
               ? const LinearGradient(
-                  colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                  colors: [AppColors.primary, AppColors.primaryLight],
                 )
               : null,
           color: isPrimary ? null : Colors.grey.shade100,

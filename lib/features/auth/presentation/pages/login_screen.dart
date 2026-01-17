@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sociaanet/core/constants/app_color.dart';
+import 'package:sociaanet/core/widgets/app_snackbar.dart';
 import 'package:sociaanet/features/auth/presentation/state/auth_state.dart';
 import 'package:sociaanet/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'signup_screen.dart';
@@ -82,11 +84,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           // Show error message
           final errorMessage = ref.read(authViewModelProvider).errorMessage;
           debugPrint('❌ Login error: $errorMessage');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(errorMessage ?? 'Login failed. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
+          AppSnackBar.showError(
+            context,
+            errorMessage ?? 'Login failed. Please try again.',
           );
         }
       }
@@ -103,10 +103,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-            ],
+            colors: AppColors.gradientPrimary,
           ),
         ),
         child: SafeArea(
@@ -193,7 +190,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                   hintText: 'Enter your email',
                                   prefixIcon: const Icon(
                                     Icons.email_outlined,
-                                    color: Color(0xFF667eea),
+                                    color: AppColors.textSecondary,
                                   ),
                                   filled: true,
                                   fillColor: const Color(0xFFF5F6FA),
@@ -204,14 +201,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF667eea),
+                                      color: AppColors.primary,
                                       width: 2,
                                     ),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: const BorderSide(
-                                      color: Colors.red,
+                                      color: AppColors.error,
                                       width: 2,
                                     ),
                                   ),
@@ -237,14 +234,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                   hintText: 'Enter your password',
                                   prefixIcon: const Icon(
                                     Icons.lock_outline,
-                                    color: Color(0xFF667eea),
+                                    color: AppColors.textSecondary,
                                   ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _isPasswordVisible
                                           ? Icons.visibility_outlined
                                           : Icons.visibility_off_outlined,
-                                      color: Color(0xFF667eea),
+                                      color: AppColors.textSecondary,
                                     ),
                                     onPressed: () {
                                       setState(() {
@@ -261,14 +258,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF667eea),
+                                      color: AppColors.primary,
                                       width: 2,
                                     ),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: const BorderSide(
-                                      color: Colors.red,
+                                      color: AppColors.error,
                                       width: 2,
                                     ),
                                   ),
@@ -295,7 +292,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                   child: const Text(
                                     'Forgot Password?',
                                     style: TextStyle(
-                                      color: Color(0xFF667eea),
+                                      color: AppColors.textSecondary,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -309,8 +306,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                 child: ElevatedButton(
                                   onPressed: _isLoading ? null : _handleLogin,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF667eea),
-                                    foregroundColor: Colors.white,
+                                    backgroundColor: AppColors.primary,
+                                    foregroundColor: AppColors.textOnPrimary,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),

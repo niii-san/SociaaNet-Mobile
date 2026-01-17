@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostScreen extends StatefulWidget {
@@ -42,7 +43,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             child: const Text(
               'Share',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: AppColors.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -77,13 +78,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF667eea).withValues(alpha: 0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
                         Icons.add_photo_alternate_outlined,
                         size: 48,
-                        color: Color(0xFF667eea),
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: 16),

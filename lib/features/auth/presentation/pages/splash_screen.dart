@@ -1,3 +1,4 @@
+import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -132,8 +133,8 @@ class _SplashScreenState extends State<SplashScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea), // Vibrant purple-blue
-              Color(0xFF764ba2), // Deep purple
+              AppColors.primary, // Vibrant purple-blue
+              AppColors.primaryLight, // Deep purple
               Color(0xFFf093fb), // Soft pink
               Color(0xFF4facfe), // Bright blue
             ],
