@@ -26,7 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource _remoteDatasource;
 
   AuthRepositoryImpl({AuthRemoteDatasource? remoteDatasource})
-      : _remoteDatasource = remoteDatasource ?? AuthRemoteDatasourceImpl();
+    : _remoteDatasource = remoteDatasource ?? AuthRemoteDatasourceImpl();
 
   @override
   Future<Either<Failure, SignupResponseModel>> signup({
@@ -44,7 +44,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _remoteDatasource.signup(request);
       return Right(response);
     } on Exception catch (e) {
-      return Left(ApiFailure(message: e.toString().replaceAll('Exception: ', '')));
+      return Left(
+        ApiFailure(message: e.toString().replaceAll('Exception: ', '')),
+      );
     }
   }
 
@@ -56,16 +58,15 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       print('\n📤 SENDING LOGIN REQUEST:');
       print('   Email: $email');
-      final request = LoginRequestModel(
-        email: email,
-        password: password,
-      );
+      final request = LoginRequestModel(email: email, password: password);
 
       final response = await _remoteDatasource.login(request);
       print('📥 RAW RESPONSE RECEIVED from datasource');
       return Right(response);
     } on Exception catch (e) {
-      return Left(ApiFailure(message: e.toString().replaceAll('Exception: ', '')));
+      return Left(
+        ApiFailure(message: e.toString().replaceAll('Exception: ', '')),
+      );
     }
   }
 
@@ -77,7 +78,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _remoteDatasource.validateSession(sessionId);
       return Right(response);
     } on Exception catch (e) {
-      return Left(ApiFailure(message: e.toString().replaceAll('Exception: ', '')));
+      return Left(
+        ApiFailure(message: e.toString().replaceAll('Exception: ', '')),
+      );
     }
   }
 
@@ -87,7 +90,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _remoteDatasource.getUserInfo();
       return Right(response);
     } on Exception catch (e) {
-      return Left(ApiFailure(message: e.toString().replaceAll('Exception: ', '')));
+      return Left(
+        ApiFailure(message: e.toString().replaceAll('Exception: ', '')),
+      );
     }
   }
 }

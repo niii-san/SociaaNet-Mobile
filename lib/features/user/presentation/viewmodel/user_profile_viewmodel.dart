@@ -4,26 +4,15 @@ import 'package:sociaanet/features/auth/presentation/state/user_state.dart';
 import 'package:sociaanet/features/user/data/repositories/user_repository.dart';
 
 /// State for user profile operations
-enum UserProfileStatus {
-  initial,
-  loading,
-  success,
-  error,
-}
+enum UserProfileStatus { initial, loading, success, error }
 
 class UserProfileState {
   final UserProfileStatus status;
   final String? errorMessage;
 
-  UserProfileState({
-    required this.status,
-    this.errorMessage,
-  });
+  UserProfileState({required this.status, this.errorMessage});
 
-  UserProfileState copyWith({
-    UserProfileStatus? status,
-    String? errorMessage,
-  }) {
+  UserProfileState copyWith({UserProfileStatus? status, String? errorMessage}) {
     return UserProfileState(
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
@@ -46,10 +35,10 @@ class UserProfileNotifier extends Notifier<UserProfileState> {
 
     try {
       final updatedUser = await _repository.uploadAvatar(imageFile);
-      
+
       // Update the current user in the global state
       ref.read(currentUserProvider.notifier).setUser(updatedUser);
-      
+
       state = state.copyWith(status: UserProfileStatus.success);
     } catch (e) {
       state = state.copyWith(
@@ -65,10 +54,10 @@ class UserProfileNotifier extends Notifier<UserProfileState> {
 
     try {
       final user = await _repository.getUserInfo();
-      
+
       // Update the current user in the global state
       ref.read(currentUserProvider.notifier).setUser(user);
-      
+
       state = state.copyWith(status: UserProfileStatus.success);
     } catch (e) {
       state = state.copyWith(
@@ -87,5 +76,5 @@ class UserProfileNotifier extends Notifier<UserProfileState> {
 /// Provider for user profile operations
 final userProfileProvider =
     NotifierProvider<UserProfileNotifier, UserProfileState>(
-  UserProfileNotifier.new,
-);
+      UserProfileNotifier.new,
+    );
