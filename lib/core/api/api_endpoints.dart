@@ -6,4 +6,6 @@ class ApiEndpoints {
   static const String userLogin = '/auth/login';
   static const String userSignup = '/auth/signup';
   static const String validateSession = '/auth/validate-session';
+  static const String getUserInfo = '/users/me';
+  static const String uploadAvatar = '/users/me/avatar';
 }
