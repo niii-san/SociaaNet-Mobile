@@ -46,5 +46,3 @@ app.*.map.json
 
 
 test/
-lib/core/api
-lib/core/services

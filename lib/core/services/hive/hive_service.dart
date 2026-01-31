@@ -40,6 +40,7 @@ class HiveService {
     _isInitialized = true;
   }
 
+
   HiveService() {
     print('🔨 HiveService constructor called');
     print('   Box is open: ${Hive.isBoxOpen(HiveBoxes.auth)}');
