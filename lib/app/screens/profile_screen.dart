@@ -22,7 +22,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    
+
     // Fetch user info on screen load
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(userProfileProvider.notifier).fetchUserInfo();
@@ -86,7 +86,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     final profileState = ref.watch(userProfileProvider);
 
     // Show loading indicator when fetching user info
-    if (profileState.status == UserProfileStatus.loading && currentUser == null) {
+    if (profileState.status == UserProfileStatus.loading &&
+        currentUser == null) {
       return const Scaffold(
         backgroundColor: Colors.white,
         body: Center(child: CircularProgressIndicator()),
@@ -136,7 +137,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: LinearGradient(
-                                colors: [AppColors.primary, AppColors.primaryLight],
+                                colors: [
+                                  AppColors.primary,
+                                  AppColors.primaryLight,
+                                ],
                               ),
                             ),
                             child: Container(
@@ -147,18 +151,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               ),
                               child: CircleAvatar(
                                 radius: 50,
-                                backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                                backgroundImage:
+                                    avatarUrl != null && avatarUrl.isNotEmpty
                                     ? NetworkImage(avatarUrl) as ImageProvider
                                     : null,
-                                onBackgroundImageError: avatarUrl != null && avatarUrl.isNotEmpty
+                                onBackgroundImageError:
+                                    avatarUrl != null && avatarUrl.isNotEmpty
                                     ? (exception, stackTrace) {
                                         // Log error but show fallback
-                                        debugPrint('Error loading avatar: $exception');
+                                        debugPrint(
+                                          'Error loading avatar: $exception',
+                                        );
                                       }
                                     : null,
                                 child: avatarUrl == null || avatarUrl.isEmpty
                                     ? Text(
-                                        currentUser?.fullName.substring(0, 1).toUpperCase() ?? 'U',
+                                        currentUser?.fullName
+                                                .substring(0, 1)
+                                                .toUpperCase() ??
+                                            'U',
                                         style: const TextStyle(
                                           fontSize: 40,
                                           fontWeight: FontWeight.bold,
@@ -177,7 +188,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                               decoration: BoxDecoration(
                                 color: AppColors.primary,
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
                               ),
                               child: const Icon(
                                 Icons.camera_alt,

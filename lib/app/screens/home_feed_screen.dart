@@ -12,6 +12,7 @@ class HomeFeedScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: SociaaNetAppBar(
         showLogo: true,
+
         actions: [
           NotificationIconButton(
             notificationCount: 3,

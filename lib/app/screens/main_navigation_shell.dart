@@ -17,6 +17,8 @@ class MainNavigationShell extends StatefulWidget {
 class _MainNavigationShellState extends State<MainNavigationShell> {
   NavItem _currentItem = NavItem.home;
 
+
+
   // Keep screens alive when switching tabs
   final Map<NavItem, Widget> _screens = {
     NavItem.home: const HomeFeedScreen(),
