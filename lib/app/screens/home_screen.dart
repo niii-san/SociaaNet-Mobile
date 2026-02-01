@@ -11,6 +11,7 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   int _currentIndex = 0;
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +45,7 @@ class _FeedScreenState extends State<FeedScreen> {
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.grey.shade200),
-              ),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -121,10 +120,7 @@ class _StoryItem extends StatelessWidget {
   final String username;
   final bool isOwn;
 
-  const _StoryItem({
-    required this.username,
-    this.isOwn = false,
-  });
+  const _StoryItem({required this.username, this.isOwn = false});
 
   @override
   Widget build(BuildContext context) {
@@ -142,10 +138,7 @@ class _StoryItem extends StatelessWidget {
                   gradient: isOwn
                       ? null
                       : const LinearGradient(
-                          colors: [
-                            AppColors.primary,
-                            Color(0xFFf093fb),
-                          ],
+                          colors: [AppColors.primary, Color(0xFFf093fb)],
                         ),
                   border: isOwn
                       ? Border.all(color: Colors.grey.shade300, width: 2)
@@ -175,11 +168,7 @@ class _StoryItem extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 12,
-                      color: Colors.white,
-                    ),
+                    child: const Icon(Icons.add, size: 12, color: Colors.white),
                   ),
                 ),
             ],
@@ -255,10 +244,7 @@ class _PostItemState extends State<_PostItem> {
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: () {},
-              ),
+              IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
             ],
           ),
         ),
@@ -327,10 +313,7 @@ class _PostItemState extends State<_PostItem> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             '${234 + widget.index * 10} likes',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
           ),
         ),
 
@@ -358,10 +341,7 @@ class _PostItemState extends State<_PostItem> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Text(
             'View all 12 comments',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
           ),
         ),
 
