@@ -1,21 +1,32 @@
+import 'dart:io';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:sociaanet/features/auth/presentation/state/user_state.dart';
+import 'package:sociaanet/features/user/presentation/viewmodel/user_profile_viewmodel.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
+class _ProfileScreenState extends ConsumerState<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    
+    // Fetch user info on screen load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(userProfileProvider.notifier).fetchUserInfo();
+    });
   }
 
   @override
@@ -24,17 +35,76 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.dispose();
   }
 
+  /// Handle avatar upload
+  Future<void> _pickAndUploadAvatar() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        final File imageFile = File(image.path);
+        await ref.read(userProfileProvider.notifier).uploadAvatar(imageFile);
+
+        if (mounted) {
+          final state = ref.read(userProfileProvider);
+          if (state.status == UserProfileStatus.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Profile picture updated successfully!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else if (state.status == UserProfileStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error: ${state.errorMessage}'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to pick image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentUser = ref.watch(currentUserProvider);
+    final profileState = ref.watch(userProfileProvider);
+
+    // Show loading indicator when fetching user info
+    if (profileState.status == UserProfileStatus.loading && currentUser == null) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Get full avatar URL with base URL prepended
+    final avatarUrl = currentUser?.fullAvatarUrl;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: const Text(
-          'Profile',
-          style: TextStyle(
+        title: Text(
+          currentUser?.username ?? 'Profile',
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
             color: Color(0xFF1a1a2e),
@@ -57,26 +127,81 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                   // Profile Avatar
                   Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [AppColors.primary, AppColors.primaryLight],
-                        ),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                            'https://i.pravatar.cc/150?img=68',
+                    child: GestureDetector(
+                      onTap: _pickAndUploadAvatar,
+                      child: Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [AppColors.primary, AppColors.primaryLight],
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                                    ? NetworkImage(avatarUrl) as ImageProvider
+                                    : null,
+                                onBackgroundImageError: avatarUrl != null && avatarUrl.isNotEmpty
+                                    ? (exception, stackTrace) {
+                                        // Log error but show fallback
+                                        debugPrint('Error loading avatar: $exception');
+                                      }
+                                    : null,
+                                child: avatarUrl == null || avatarUrl.isEmpty
+                                    ? Text(
+                                        currentUser?.fullName.substring(0, 1).toUpperCase() ?? 'U',
+                                        style: const TextStyle(
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.primary,
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2),
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if (profileState.status == UserProfileStatus.loading)
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.3),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
@@ -84,9 +209,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                   const SizedBox(height: 16),
 
                   // Name and username
-                  const Text(
-                    'John Doe',
-                    style: TextStyle(
+                  Text(
+                    currentUser?.fullName ?? 'Loading...',
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1a1a2e),
@@ -94,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '@johndoe',
+                    '@${currentUser?.username ?? 'username'}',
                     style: TextStyle(fontSize: 15, color: Colors.grey.shade500),
                   ),
 
@@ -104,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
-                      'Digital creator & Tech enthusiast 🚀\nSan Francisco, CA',
+                      currentUser?.emailAddress ?? '',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,

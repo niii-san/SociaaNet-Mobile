@@ -1,17 +1,20 @@
 import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sociaanet/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import '../../../../app/screens/main_navigation_shell.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   final Widget nextPage;
 
   const SplashScreen({super.key, required this.nextPage});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with TickerProviderStateMixin {
   late AnimationController _logoController;
   late AnimationController _textController;
@@ -101,8 +104,27 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     // Navigate to next page after 4 seconds
-    Future.delayed(const Duration(seconds: 4), () {
-      if (mounted) {
+    Future.delayed(const Duration(seconds: 4), () async {
+      if (!mounted) return;
+
+      // Validate session before navigating
+      final isSessionValid = await ref.read(authViewModelProvider.notifier).validateSessionAndLogin();
+
+      if (!mounted) return;
+
+      if (isSessionValid) {
+        // Session is valid, navigate directly to main app
+        Navigator.of(context).pushReplacement(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => const MainNavigationShell(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 500),
+          ),
+        );
+      } else {
+        // No valid session, navigate to onboarding/login
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => widget.nextPage,

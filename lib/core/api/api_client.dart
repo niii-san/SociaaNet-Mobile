@@ -20,10 +20,7 @@ class ApiClient {
       ),
     );
 
-    _dio.interceptors.addAll([
-      _LoggingInterceptor(),
-      _AuthInterceptor(),
-    ]);
+    _dio.interceptors.addAll([_LoggingInterceptor(), _AuthInterceptor()]);
   }
 
   /// Singleton instance
@@ -168,7 +165,9 @@ class _LoggingInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (kDebugMode) {
       debugPrint('┌─────────────────────────────────────────────────────────');
-      debugPrint('│ ✅ RESPONSE: ${response.statusCode} ${response.requestOptions.uri}');
+      debugPrint(
+        '│ ✅ RESPONSE: ${response.statusCode} ${response.requestOptions.uri}',
+      );
       debugPrint('│ Data: ${response.data}');
       debugPrint('└─────────────────────────────────────────────────────────');
     }

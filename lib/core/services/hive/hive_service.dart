@@ -27,27 +27,44 @@ class HiveService {
 
   /// Initialize Hive - call this in main() before runApp()
   static Future<void> init() async {
-    if (_isInitialized) return;
+    if (_isInitialized) {
+      print('⚠️  Hive already initialized');
+      return;
+    }
 
+    print('🔧 Initializing Hive...');
     await Hive.initFlutter();
     await Hive.openBox(HiveBoxes.auth);
+    print('✅ Hive initialized successfully');
+    print('   Auth box opened: ${Hive.isBoxOpen(HiveBoxes.auth)}');
     _isInitialized = true;
   }
 
+
   HiveService() {
+    print('🔨 HiveService constructor called');
+    print('   Box is open: ${Hive.isBoxOpen(HiveBoxes.auth)}');
     _authBox = Hive.box(HiveBoxes.auth);
+    print('   Box retrieved. Length: ${_authBox.length}');
+    print('   Keys in box: ${_authBox.keys.toList()}');
   }
 
   // ==================== Session Management ====================
 
   /// Save session ID
   Future<void> saveSessionId(String sessionId) async {
+    print('💾 HiveService.saveSessionId() called with: $sessionId');
     await _authBox.put(AuthKeys.sessionId, sessionId);
+    print('✅ Session saved. Verifying: ${_authBox.get(AuthKeys.sessionId)}');
   }
 
   /// Get session ID
   String? getSessionId() {
-    return _authBox.get(AuthKeys.sessionId);
+    final sessionId = _authBox.get(AuthKeys.sessionId);
+    print('📦 HiveService.getSessionId() returning: ${sessionId ?? "NULL"}');
+    print('   All keys in auth_box: ${_authBox.keys.toList()}');
+    print('   Auth box length: ${_authBox.length}');
+    return sessionId;
   }
 
   /// Check if session exists
@@ -94,7 +111,9 @@ class HiveService {
 
   /// Clear all auth data (for logout)
   Future<void> clearAuthData() async {
+    print('🗑️  Clearing all auth data from Hive');
     await _authBox.clear();
+    print('✅ Auth data cleared. Box length: ${_authBox.length}');
   }
 
   /// Close all boxes (call when app terminates if needed)
