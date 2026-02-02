@@ -1,3 +1,5 @@
+import 'package:sociaanet/core/models/user_model.dart';
+
 /// Request model for signup API
 class SignupRequestModel {
   final String fullName;
@@ -185,7 +187,7 @@ class GetUserInfoResponseModel {
   final int statusCode;
   final bool success;
   final String message;
-  final UserModel user;
+  final User user;
 
   GetUserInfoResponseModel({
     required this.statusCode,
@@ -200,7 +202,7 @@ class GetUserInfoResponseModel {
       statusCode: json['status_code'] ?? 200,
       success: json['success'] ?? false,
       message: json['message'] ?? 'User fetched successfully',
-      user: UserModel.fromJson(data),
+      user: User.fromJson(data),
     );
   }
 }
