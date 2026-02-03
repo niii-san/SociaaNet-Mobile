@@ -1,25 +1,40 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sociaanet/features/auth/data/model/auth_api_model.dart';
+import 'package:sociaanet/core/models/user_model.dart';
 
 /// Notifier for managing current user state
-class CurrentUserNotifier extends Notifier<UserModel?> {
+class CurrentUserNotifier extends Notifier<User?> {
   @override
-  UserModel? build() {
+  User? build() {
     return null;
   }
 
-  void setUser(UserModel? user) {
+  void setUser(User? user) {
     state = user;
   }
 
   void clearUser() {
     state = null;
   }
+
+  void updateUser({
+    String? fullName,
+    String? username,
+    String? bio,
+    String? avatarUrl,
+  }) {
+    if (state != null) {
+      state = state!.copyWith(
+        fullName: fullName,
+        username: username,
+        avatarUrl: avatarUrl,
+      );
+    }
+  }
 }
 
 /// Provider for current user information (in-memory only)
 /// This holds the user data for the current session and is cleared when the app restarts
-final currentUserProvider = NotifierProvider<CurrentUserNotifier, UserModel?>(
+final currentUserProvider = NotifierProvider<CurrentUserNotifier, User?>(
   CurrentUserNotifier.new,
 );
 
