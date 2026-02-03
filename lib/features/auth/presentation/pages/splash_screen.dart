@@ -2,8 +2,9 @@ import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sociaanet/features/auth/presentation/viewmodel/auth_viewmodel.dart';
-import '../../../../app/screens/main_navigation_shell.dart';
+import 'package:sociaanet/app/router.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   final Widget nextPage;
@@ -114,26 +115,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
       if (isSessionValid) {
         // Session is valid, navigate directly to main app
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const MainNavigationShell(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
+        context.go(AppRoutes.home);
       } else {
         // No valid session, navigate to onboarding/login
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => widget.nextPage,
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
+        context.go(AppRoutes.onboarding);
       }
     });
   }
