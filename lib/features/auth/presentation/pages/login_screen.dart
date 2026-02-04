@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:sociaanet/core/widgets/app_snackbar.dart';
 import 'package:sociaanet/features/auth/presentation/state/auth_state.dart';
 import 'package:sociaanet/features/auth/presentation/viewmodel/auth_viewmodel.dart';
-import 'signup_screen.dart';
-import '../../../../app/screens/main_navigation_shell.dart';
+import 'package:sociaanet/app/router.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -75,11 +75,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       if (mounted) {
         if (success) {
           // Navigate to main screen after successful login
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const MainNavigationShell(),
-            ),
-          );
+          context.go(AppRoutes.home);
         } else {
           // Show error message
           final errorMessage = ref.read(authViewModelProvider).errorMessage;
@@ -410,11 +406,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const SignupScreen(),
-                                ),
-                              );
+                              context.push(AppRoutes.signup);
                             },
                             child: const Text(
                               'Sign Up',
