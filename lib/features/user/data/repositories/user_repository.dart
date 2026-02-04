@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sociaanet/core/models/user_model.dart';
 import 'package:sociaanet/features/auth/data/model/auth_api_model.dart';
 import 'package:sociaanet/features/user/data/datasources/user_datasource.dart';
 
@@ -10,8 +11,8 @@ class UserRepository {
       : _dataSource = dataSource ?? UserDataSource();
 
   /// Upload user profile avatar
-  /// Returns the updated user model with new avatar URL
-  Future<UserModel> uploadAvatar(File imageFile) async {
+  /// Returns the updated user with new avatar URL
+  Future<User> uploadAvatar(File imageFile) async {
     try {
       final response = await _dataSource.uploadAvatar(imageFile);
       return response.user;
@@ -20,8 +21,13 @@ class UserRepository {
     }
   }
 
+  /// Upload avatar by file path (convenience)
+  Future<User> uploadAvatarByPath(String path) async {
+    return uploadAvatar(File(path));
+  }
+
   /// Fetch current user information
-  Future<UserModel> getUserInfo() async {
+  Future<User> getUserInfo() async {
     try {
       final response = await _dataSource.getUserInfo();
       return response.user;
