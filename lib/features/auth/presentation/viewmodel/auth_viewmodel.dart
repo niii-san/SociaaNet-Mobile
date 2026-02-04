@@ -125,7 +125,7 @@ class AuthViewModel extends Notifier<AuthState> {
           (userInfoResponse) async {
             // Save user info to in-memory state
             print('✅ USER INFO FETCHED:');
-            print('   User ID: ${userInfoResponse.user.id}');
+            print('   User ID: ${userInfoResponse.user.userId}');
             print('   Full Name: ${userInfoResponse.user.fullName}');
             print('   Username: ${userInfoResponse.user.username}');
             print('   Email: ${userInfoResponse.user.emailAddress}');
