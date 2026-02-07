@@ -66,3 +66,5 @@ class AppColors {
   static const Color inputBorder = Color(0xFFE0E0E0);
   static const Color inputFocusBorder = Color(0xFF0A0A0A);
 }
+
+// Extended palette for dark mode support
