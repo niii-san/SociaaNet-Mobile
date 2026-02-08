@@ -1,299 +1,211 @@
-import 'package:sociaanet/core/constants/app_color.dart';
 import 'package:flutter/material.dart';
-import '../widgets/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sociaanet/core/models/models.dart';
+import 'package:sociaanet/core/providers/app_providers.dart';
+import 'package:sociaanet/app/widgets/post_card.dart';
+import 'package:sociaanet/app/widgets/user_avatar.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
-/// Home feed screen displaying stories and posts
-class HomeFeedScreen extends StatelessWidget {
+class HomeFeedScreen extends ConsumerStatefulWidget {
   const HomeFeedScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SociaaNetAppBar(
-        showLogo: true,
+  ConsumerState<HomeFeedScreen> createState() => _HomeFeedScreenState();
+}
 
+class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
+  final RefreshController _refreshController = RefreshController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(homeFeedProvider.notifier).loadFeed(refresh: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final feedState = ref.watch(homeFeedProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('SociaaNet',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: theme.colorScheme.primary,
+          )),
         actions: [
-          NotificationIconButton(
-            notificationCount: 3,
-            onPressed: () {
-              // TODO: Navigate to notifications
-            },
+          IconButton(
+            icon: const Icon(Icons.add_box_outlined),
+            onPressed: () => context.push('/create-post'),
           ),
-          const SizedBox(width: 4),
         ],
+        elevation: 0,
+        scrolledUnderElevation: 0.5,
       ),
-      body: Column(
-        children: [
-          // Stories Section
-          Container(
-            height: 110,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-            ),
+      body: feedState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 48),
+              const SizedBox(height: 12),
+              Text('Failed to load feed', style: theme.textTheme.bodyLarge),
+              const SizedBox(height: 8),
+              FilledButton(
+                onPressed: () => ref.read(homeFeedProvider.notifier).loadFeed(refresh: true),
+                child: const Text('Try Again'),
+              ),
+            ],
+          ),
+        ),
+        data: (posts) {
+          if (posts.isEmpty) {
+            return _buildEmptyFeed(theme);
+          }
+          return SmartRefresher(
+            controller: _refreshController,
+            enablePullDown: true,
+            enablePullUp: true,
+            onRefresh: () async {
+              await ref.read(homeFeedProvider.notifier).loadFeed(refresh: true);
+              _refreshController.refreshCompleted();
+            },
+            onLoading: () async {
+              await ref.read(homeFeedProvider.notifier).loadFeed();
+              _refreshController.loadComplete();
+            },
             child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: 8,
+              itemCount: posts.length,
               itemBuilder: (context, index) {
-                return _StoryItem(
-                  username: index == 0 ? 'Your Story' : 'user${index + 1}',
-                  isOwn: index == 0,
+                return PostCard(
+                  post: posts[index],
+                  onPostUpdated: (updatedPost) {
+                    // Optimistic update in provider
+                  },
                 );
               },
             ),
-          ),
-
-          // Posts Feed
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return _PostItem(index: index);
-              },
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
-}
 
-// Story Item Widget
-class _StoryItem extends StatelessWidget {
-  final String username;
-  final bool isOwn;
+  Widget _buildEmptyFeed(ThemeData theme) {
+    final suggestedAsync = ref.watch(suggestedUsersProvider);
 
-  const _StoryItem({required this.username, this.isOwn = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          Stack(
-            children: [
-              Container(
-                width: 68,
-                height: 68,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: isOwn
-                      ? null
-                      : const LinearGradient(
-                          colors: [AppColors.primary, Color(0xFFf093fb)],
-                        ),
-                  border: isOwn
-                      ? Border.all(color: Colors.grey.shade300, width: 2)
-                      : null,
-                ),
-                padding: const EdgeInsets.all(3),
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey.shade300,
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        'https://i.pravatar.cc/150?img=${username.hashCode % 70}',
-                      ),
-                      fit: BoxFit.cover,
+          const SizedBox(height: 48),
+          Icon(Icons.dynamic_feed_outlined, size: 72,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.15)),
+          const SizedBox(height: 16),
+          Text('Your feed is empty', style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          Text('Follow people to see their posts here',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
+          const SizedBox(height: 32),
+
+          // Suggested users
+          suggestedAsync.when(
+            loading: () => const CircularProgressIndicator(),
+            error: (_, __) => const SizedBox.shrink(),
+            data: (users) {
+              if (users.isEmpty) return const SizedBox.shrink();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Suggested for you',
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 180,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: users.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final user = users[index];
+                        return _SuggestedUserCard(user: user);
+                      },
                     ),
                   ),
-                ),
-              ),
-              if (isOwn)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
-                    ),
-                    child: const Icon(Icons.add, size: 12, color: Colors.white),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            width: 70,
-            child: Text(
-              username,
-              style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Post Item Widget
-class _PostItem extends StatefulWidget {
-  final int index;
-
-  const _PostItem({required this.index});
-
-  @override
-  State<_PostItem> createState() => _PostItemState();
-}
-
-class _PostItemState extends State<_PostItem> {
-  bool isLiked = false;
-  bool isSaved = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Post Header
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage: NetworkImage(
-                  'https://i.pravatar.cc/150?img=${widget.index + 10}',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'username${widget.index + 1}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      '2 hours ago',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-            ],
-          ),
-        ),
-
-        // Post Image
-        Container(
-          width: double.infinity,
-          height: 400,
-          color: Colors.grey.shade200,
-          child: Image.network(
-            'https://picsum.photos/400/400?random=${widget.index}',
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey.shade300,
-                child: const Center(
-                  child: Icon(Icons.image, size: 60, color: Colors.grey),
-                ),
+                ],
               );
             },
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
 
-        // Post Actions
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_outline,
-                  color: isLiked ? AppColors.error : Colors.black87,
-                ),
-                onPressed: () {
-                  setState(() {
-                    isLiked = !isLiked;
-                  });
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.mode_comment_outlined),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.send_outlined),
-                onPressed: () {},
-              ),
-              const Spacer(),
-              IconButton(
-                icon: Icon(
-                  isSaved ? Icons.bookmark : Icons.bookmark_outline,
-                  color: isSaved ? Colors.black87 : Colors.black87,
-                ),
-                onPressed: () {
-                  setState(() {
-                    isSaved = !isSaved;
-                  });
-                },
-              ),
-            ],
+class _SuggestedUserCard extends ConsumerWidget {
+  final SuggestedUser user;
+  const _SuggestedUserCard({required this.user});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: 140,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          UserAvatar(
+            imageUrl: user.fullAvatarUrl,
+            fallbackName: user.fullName,
+            radius: 28,
           ),
-        ),
-
-        // Likes Count
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            '${234 + widget.index * 10} likes',
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-          ),
-        ),
-
-        // Caption
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: RichText(
-            text: TextSpan(
-              style: const TextStyle(color: Colors.black87, fontSize: 14),
-              children: [
-                TextSpan(
-                  text: 'username${widget.index + 1} ',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const TextSpan(
-                  text: 'Beautiful day at the beach! 🌊 #sociaanet #moments',
-                ),
-              ],
+          const SizedBox(height: 8),
+          Text(user.fullName,
+            style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+            maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+          Text('@${user.username}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 11),
+            maxLines: 1, overflow: TextOverflow.ellipsis),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: () async {
+                try {
+                  await ref.read(followServiceProvider).followUser(user.userId);
+                } catch (_) {}
+              },
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                minimumSize: Size.zero,
+                textStyle: const TextStyle(fontSize: 12),
+              ),
+              child: const Text('Follow'),
             ),
           ),
-        ),
-
-        // View Comments
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Text(
-            'View all 12 comments',
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-      ],
+        ],
+      ),
     );
   }
 }
