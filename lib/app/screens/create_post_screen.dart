@@ -1,15 +1,21 @@
-import 'package:sociaanet/core/constants/app_color.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:sociaanet/core/providers/app_providers.dart';
+import 'package:go_router/go_router.dart';
 
-class CreatePostScreen extends StatefulWidget {
+class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
 
   @override
-  State<CreatePostScreen> createState() => _CreatePostScreenState();
+  ConsumerState<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
-class _CreatePostScreenState extends State<CreatePostScreen> {
-  final TextEditingController _captionController = TextEditingController();
+class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
+  final _captionController = TextEditingController();
+  final List<File> _selectedImages = [];
+  bool _isPosting = false;
 
   @override
   void dispose() {
@@ -17,154 +23,164 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     super.dispose();
   }
 
+  Future<void> _pickImages() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickMultiImage(
+      maxWidth: 1920,
+      maxHeight: 1920,
+      imageQuality: 85,
+    );
+    if (picked.isNotEmpty) {
+      setState(() {
+        _selectedImages.addAll(picked.map((x) => File(x.path)));
+      });
+    }
+  }
+
+  Future<void> _takePhoto() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 1920,
+      maxHeight: 1920,
+      imageQuality: 85,
+    );
+    if (picked != null) {
+      setState(() => _selectedImages.add(File(picked.path)));
+    }
+  }
+
+  Future<void> _createPost() async {
+    if (_selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one image')));
+      return;
+    }
+
+    setState(() => _isPosting = true);
+
+    try {
+      final service = ref.read(postServiceProvider);
+      await service.createPost(
+        imagePaths: _selectedImages.map((f) => f.path).toList(),
+        caption: _captionController.text.isNotEmpty ? _captionController.text : null,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post created!'), backgroundColor: Colors.green));
+        context.pop();
+        // Refresh feed
+        ref.read(homeFeedProvider.notifier).loadFeed(refresh: true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed: $e'), backgroundColor: Colors.red));
+      }
+    } finally {
+      if (mounted) setState(() => _isPosting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black87),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Create Post',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: const Text('Create Post'),
         actions: [
-          TextButton(
-            onPressed: () {
-              // TODO: Implement post creation
-            },
-            child: const Text(
-              'Share',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: FilledButton(
+              onPressed: _isPosting ? null : _createPost,
+              child: _isPosting
+                  ? const SizedBox(width: 20, height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('Post'),
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Image Selection Area
-            GestureDetector(
-              onTap: () {
-                // TODO: Implement image picker
-              },
-              child: Container(
-                width: double.infinity,
-                height: 300,
-                margin: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 2,
-                    strokeAlign: BorderSide.strokeAlignInside,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.add_photo_alternate_outlined,
-                        size: 48,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Tap to select photos',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Share your moments with friends',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade500,
-                      ),
-                    ),
-                  ],
-                ),
+            // Caption
+            TextField(
+              controller: _captionController,
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: "What's on your mind?",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
-
-            // Caption Input
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _captionController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'Write a caption...',
-                  hintStyle: TextStyle(color: Colors.grey.shade500),
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-
             const SizedBox(height: 16),
 
-            // Options List
-            _buildOptionTile(
-              icon: Icons.location_on_outlined,
-              title: 'Add Location',
-              onTap: () {},
+            // Image picker buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _pickImages,
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Gallery'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _takePhoto,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Camera'),
+                  ),
+                ),
+              ],
             ),
-            _buildOptionTile(
-              icon: Icons.person_add_outlined,
-              title: 'Tag People',
-              onTap: () {},
-            ),
-            _buildOptionTile(
-              icon: Icons.music_note_outlined,
-              title: 'Add Music',
-              onTap: () {},
-            ),
+            const SizedBox(height: 16),
+
+            // Selected images
+            if (_selectedImages.isNotEmpty) ...[
+              Text('${_selectedImages.length} images selected',
+                style: theme.textTheme.bodySmall),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 120,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _selectedImages.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    return Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(_selectedImages[index],
+                            width: 120, height: 120, fit: BoxFit.cover),
+                        ),
+                        Positioned(
+                          top: 4, right: 4,
+                          child: GestureDetector(
+                            onTap: () => setState(() => _selectedImages.removeAt(index)),
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.black54, shape: BoxShape.circle),
+                              child: const Icon(Icons.close, size: 14, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildOptionTile({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black87),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: onTap,
     );
   }
 }
