@@ -9,3 +9,5 @@ class ApiEndpoints {
   static const String getUserInfo = '/users/me';
   static const String uploadAvatar = '/users/me/avatar';
 }
+
+// Endpoint versioning updated
