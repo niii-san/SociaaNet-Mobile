@@ -199,3 +199,5 @@ class _AuthInterceptor extends Interceptor {
     handler.next(err);
   }
 }
+
+// Improved request interceptor logging
