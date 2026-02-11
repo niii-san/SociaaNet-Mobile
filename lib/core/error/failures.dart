@@ -19,3 +19,5 @@ class ApiFailure extends Failure {
   final int? statusCode;
   const ApiFailure({this.statusCode, required String message}) : super(message);
 }
+
+// Socket connection failure type added
