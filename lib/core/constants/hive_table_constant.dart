@@ -7,3 +7,5 @@ class HiveTableConstant {
 
   static const String userTable = 'user_table';
 }
+
+// Added notification cache table
