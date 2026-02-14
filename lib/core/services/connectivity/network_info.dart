@@ -42,3 +42,5 @@ class NetworkInfo implements INetworkInfo {
     }
   }
 }
+
+// Added connection type detection
