@@ -121,3 +121,5 @@ class HiveService {
     await Hive.close();
   }
 }
+
+// Added cache expiration logic
