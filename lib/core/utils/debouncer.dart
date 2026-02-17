@@ -12,3 +12,5 @@ class Debouncer {
     _timer?.cancel();
   }
 }
+
+// Cancel method exposed for cleanup
