@@ -43,3 +43,5 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
+// Focus node support added
