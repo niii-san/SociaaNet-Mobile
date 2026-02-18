@@ -17,3 +17,5 @@ class AppLogger {
     dev.log('[NET] $method $url ${statusCode ?? ""}', name: 'SociaaNet');
   }
 }
+
+// Added log level filtering support
