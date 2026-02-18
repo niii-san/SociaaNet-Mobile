@@ -16,3 +16,5 @@ class StringConstants {
   static const String serverError = 'Server error occurred';
   static const String sessionExpired = 'Session expired. Please login again';
 }
+
+// Chat module strings added
