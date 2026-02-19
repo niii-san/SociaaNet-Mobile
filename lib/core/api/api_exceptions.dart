@@ -113,3 +113,5 @@ class ApiException implements Exception {
   @override
   String toString() => 'ApiException: $message (Status: $statusCode)';
 }
+
+// Rate limiting exception handling
