@@ -25,3 +25,5 @@ class EmptyStateWidget extends StatelessWidget {
     );
   }
 }
+
+// Added custom illustration support
