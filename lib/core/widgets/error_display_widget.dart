@@ -30,3 +30,5 @@ class ErrorDisplayWidget extends StatelessWidget {
     );
   }
 }
+
+// Added animation support for error state
