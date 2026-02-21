@@ -34,3 +34,5 @@ class _ShimmerLoadingState extends State<ShimmerLoading> with SingleTickerProvid
     );
   }
 }
+
+// Added list shimmer variant
