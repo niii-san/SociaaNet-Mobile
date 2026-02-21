@@ -30,3 +30,5 @@ class CachedImage extends StatelessWidget {
     );
   }
 }
+
+// Added placeholder image support
