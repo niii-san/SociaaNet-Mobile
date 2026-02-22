@@ -33,3 +33,5 @@ class StoryAvatar extends StatelessWidget {
     );
   }
 }
+
+// Added add-story button variant
