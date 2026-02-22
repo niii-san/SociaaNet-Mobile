@@ -45,3 +45,5 @@ class ProfileHeader extends StatelessWidget {
     );
   }
 }
+
+// Added follow/unfollow button
