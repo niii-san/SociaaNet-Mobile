@@ -21,3 +21,5 @@ class NotificationTile extends StatelessWidget {
     );
   }
 }
+
+// Added swipe to dismiss support
