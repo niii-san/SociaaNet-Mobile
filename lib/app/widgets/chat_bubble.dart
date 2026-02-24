@@ -35,3 +35,5 @@ class ChatBubble extends StatelessWidget {
     );
   }
 }
+
+// Added read receipt indicator
