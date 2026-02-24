@@ -56,3 +56,5 @@ class _ReelPlayerState extends State<ReelPlayer> {
     );
   }
 }
+
+// Added double-tap to like gesture
