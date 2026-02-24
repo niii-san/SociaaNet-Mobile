@@ -15,3 +15,5 @@ class LocalNotificationService {
     // Cancel all notifications
   }
 }
+
+// Added channel configuration for Android
