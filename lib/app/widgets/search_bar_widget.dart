@@ -25,3 +25,5 @@ class SearchBarWidget extends StatelessWidget {
     );
   }
 }
+
+// Added debounced search callback
