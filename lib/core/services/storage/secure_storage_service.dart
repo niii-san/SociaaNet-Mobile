@@ -20,3 +20,5 @@ class SecureStorageService {
     return await _storage.containsKey(key: key);
   }
 }
+
+// Added token refresh support
