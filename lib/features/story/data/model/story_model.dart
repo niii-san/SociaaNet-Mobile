@@ -25,3 +25,5 @@ class StoryModel {
     );
   }
 }
+
+// Added toJson serialization
