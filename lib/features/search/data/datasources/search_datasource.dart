@@ -15,3 +15,5 @@ class SearchDatasource {
     return response.data['posts'] ?? [];
   }
 }
+
+// Added search suggestions endpoint
