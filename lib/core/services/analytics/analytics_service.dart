@@ -23,3 +23,5 @@ class AnalyticsService {
     logEvent('share', {'content_type': contentType, 'item_id': itemId});
   }
 }
+
+// Added user property tracking
