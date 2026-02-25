@@ -21,3 +21,5 @@ class ImageCacheService {
 
   bool containsKey(String key) => _cache.containsKey(key);
 }
+
+// Added cache size monitoring
