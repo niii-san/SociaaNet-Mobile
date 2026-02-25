@@ -19,3 +19,5 @@ class StoryDatasource {
     await _apiClient.post('${ApiEndpoints.baseUrl}/stories/$storyId/view');
   }
 }
+
+// Added story deletion support
