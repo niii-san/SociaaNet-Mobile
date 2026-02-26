@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sociaanet/features/auth/data/model/auth_api_model.dart';
+import 'package:sociaanet/core/models/user_model.dart';
 import 'package:sociaanet/features/auth/presentation/state/user_state.dart';
 
 void main() {
@@ -9,8 +9,8 @@ void main() {
     testWidgets('should display user data when currentUserProvider has data',
         (WidgetTester tester) async {
       // Arrange
-      final testUser = UserModel(
-        id: 'test123',
+      final testUser = User(
+        userId: 'test123',
         fullName: 'Test User',
         username: 'testuser',
         emailAddress: 'test@example.com',
@@ -102,8 +102,8 @@ void main() {
 
       // Update user
       container.read(currentUserProvider.notifier).setUser(
-            UserModel(
-              id: 'new123',
+            User(
+              userId: 'new123',
               fullName: 'New User',
               username: 'newuser',
               emailAddress: 'new@example.com',
@@ -125,8 +125,8 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(currentUserProvider.notifier).setUser(
-            UserModel(
-              id: 'test123',
+            User(
+              userId: 'test123',
               fullName: 'Test User',
               username: 'testuser',
               emailAddress: 'test@example.com',
@@ -190,8 +190,8 @@ void main() {
 
       // Set user - logged in
       container.read(currentUserProvider.notifier).setUser(
-            UserModel(
-              id: 'test123',
+            User(
+              userId: 'test123',
               fullName: 'Test User',
               username: 'testuser',
               emailAddress: 'test@example.com',
