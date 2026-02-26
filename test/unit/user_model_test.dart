@@ -219,7 +219,7 @@ void main() {
       expect(response.statusCode, equals(200));
       expect(response.success, isTrue);
       expect(response.message, equals('User fetched successfully'));
-      expect(response.user.id, equals('user789'));
+      expect(response.user.userId, equals('user789'));
       expect(response.user.fullName, equals('Bob Johnson'));
       expect(response.user.avatarUrl, equals('avatar_key_789'));
     });
@@ -243,7 +243,7 @@ void main() {
       expect(response.statusCode, equals(200));
       expect(response.success, isFalse);
       expect(response.message, equals('User fetched successfully'));
-      expect(response.user.id, equals('user999'));
+      expect(response.user.userId, equals('user999'));
     });
   });
 }
