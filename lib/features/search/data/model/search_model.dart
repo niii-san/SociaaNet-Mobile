@@ -17,3 +17,5 @@ class SearchResult {
     );
   }
 }
+
+// Added search history support
