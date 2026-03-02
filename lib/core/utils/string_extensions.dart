@@ -12,3 +12,5 @@ extension StringExtensions on String {
     return isEmpty ? '' : this[0].toUpperCase();
   }
 }
+
+// Added URL extraction method
