@@ -15,3 +15,5 @@ class SearchRepository {
     return data.map((json) => SearchResult.fromJson(json)).toList();
   }
 }
+
+// Added recent searches caching
