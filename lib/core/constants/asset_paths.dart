@@ -11,3 +11,5 @@ class AssetPaths {
   static const String emptyFeed = '$_images/empty_feed.png';
   static const String noConnection = '$_images/no_connection.png';
 }
+
+// Added animation asset paths
