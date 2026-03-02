@@ -199,3 +199,5 @@ ThemeData getApplicationTheme() {
   );
 }
 
+
+// Updated card theme elevation
