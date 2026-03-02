@@ -118,3 +118,5 @@ class NotificationIconButton extends StatelessWidget {
     );
   }
 }
+
+// Added notification badge support
