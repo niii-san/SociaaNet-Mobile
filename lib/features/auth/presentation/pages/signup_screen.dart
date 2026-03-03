@@ -559,3 +559,5 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
     );
   }
 }
+
+// Added terms and conditions checkbox
