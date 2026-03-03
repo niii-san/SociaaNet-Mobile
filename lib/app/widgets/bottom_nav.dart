@@ -104,3 +104,5 @@ class _NavItemWidget extends StatelessWidget {
     }
   }
 }
+
+// Added badge count for notifications tab
