@@ -78,3 +78,5 @@ final userProfileProvider =
     NotifierProvider<UserProfileNotifier, UserProfileState>(
       UserProfileNotifier.new,
     );
+
+// Added follow/unfollow toggle

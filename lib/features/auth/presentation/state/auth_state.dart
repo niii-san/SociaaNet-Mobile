@@ -33,3 +33,5 @@ class AuthState extends Equatable {
   @override
   List<Object?> get props => [status, errorMessage, successMessage];
 }
+
+// Added loading substates
