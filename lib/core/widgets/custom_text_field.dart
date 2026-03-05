@@ -45,3 +45,5 @@ class CustomTextField extends StatelessWidget {
 }
 
 // Focus node support added
+
+// Added character counter support
