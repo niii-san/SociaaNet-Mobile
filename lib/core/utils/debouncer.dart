@@ -14,3 +14,5 @@ class Debouncer {
 }
 
 // Cancel method exposed for cleanup
+
+// Added throttle mode option
