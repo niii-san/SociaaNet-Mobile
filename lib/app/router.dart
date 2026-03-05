@@ -188,3 +188,5 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+// Added deep link route handling
