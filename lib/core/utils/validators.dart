@@ -25,3 +25,5 @@ class Validators {
 }
 
 // Phone validation method added
+
+// Confirm password validation added
