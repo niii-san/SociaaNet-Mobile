@@ -491,3 +491,5 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
+
+// Added share button to post card
