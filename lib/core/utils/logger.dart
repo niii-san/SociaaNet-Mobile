@@ -19,3 +19,5 @@ class AppLogger {
 }
 
 // Added log level filtering support
+
+// Added file logging support
