@@ -23,3 +23,5 @@ class LoadingIndicator extends StatelessWidget {
 }
 
 // Added adaptive color for dark mode
+
+// Added pulse animation variant
