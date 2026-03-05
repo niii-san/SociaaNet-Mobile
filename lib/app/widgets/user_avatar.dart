@@ -109,3 +109,5 @@ class UserAvatar extends StatelessWidget {
     );
   }
 }
+
+// Added online status indicator
