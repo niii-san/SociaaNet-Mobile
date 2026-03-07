@@ -69,6 +69,9 @@ dependencies:
   # Pull to refresh
   pull_to_refresh_flutter3: ^2.0.2
 
+  light_sensor: ^3.0.2
+  sensors_plus: ^7.0.0
+
   # Relative timestamps
   timeago: ^3.7.0
 
