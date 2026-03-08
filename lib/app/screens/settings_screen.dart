@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sociaanet/core/models/models.dart';
 import 'package:sociaanet/core/providers/app_providers.dart';
 import 'package:sociaanet/core/providers/theme_provider.dart';
-import 'package:sociaanet/features/auth/presentation/state/user_state.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {

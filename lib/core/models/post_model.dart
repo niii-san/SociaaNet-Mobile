@@ -184,6 +184,7 @@ class Post {
 }
 
 class FeedPost extends Post {
+  @override
   final String postId;
   final bool isFollowing;
 

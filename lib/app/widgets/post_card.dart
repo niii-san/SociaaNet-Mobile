@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sociaanet/core/models/models.dart';
 import 'package:sociaanet/core/providers/app_providers.dart';
-import 'package:sociaanet/core/services/post_service.dart';
 import 'package:sociaanet/app/widgets/user_avatar.dart';
 import 'package:sociaanet/app/widgets/comments_sheet.dart';
 import 'package:timeago/timeago.dart' as timeago;

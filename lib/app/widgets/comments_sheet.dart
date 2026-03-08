@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sociaanet/core/models/models.dart';
-import 'package:sociaanet/core/services/comment_service.dart';
 import 'package:sociaanet/core/providers/app_providers.dart';
 import 'package:sociaanet/app/widgets/user_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -109,16 +108,14 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
             : await service.addReelComment(widget.postId, text);
       }
 
-      if (newComment != null) {
-        setState(() {
-          _comments.insert(0, newComment!);
-          _replyingTo = null;
-          _replyingToUsername = null;
-        });
-        _commentController.clear();
-        widget.onCommentAdded?.call();
-      }
-    } catch (_) {
+      setState(() {
+        _comments.insert(0, newComment!);
+        _replyingTo = null;
+        _replyingToUsername = null;
+      });
+      _commentController.clear();
+      widget.onCommentAdded?.call();
+        } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to send comment')),
