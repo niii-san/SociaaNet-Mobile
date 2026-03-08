@@ -8,6 +8,10 @@ abstract class AuthRemoteDatasource {
   Future<LoginResponseModel> login(LoginRequestModel request);
   Future<ValidateSessionResponseModel> validateSession(String sessionId);
   Future<GetUserInfoResponseModel> getUserInfo();
+  Future<void> forgotPasswordOtp(String email);
+  Future<void> changePasswordWithOtp({required String email, required String otp, required String newPassword});
+  Future<void> changePassword({required String currentPassword, required String newPassword});
+  Future<void> logout();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
@@ -138,6 +142,82 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       throw Exception(errorMessage);
     }
   }
-}
 
-// Added password reset endpoint
+  @override
+  Future<void> forgotPasswordOtp(String email) async {
+    try {
+      await _apiClient.get(
+        ApiEndpoints.forgotPasswordOtp(email),
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Failed to send OTP.';
+      final responseData = e.response?.data;
+      if (responseData is Map) {
+        errorMessage = responseData['message'] ?? errorMessage;
+      }
+      throw Exception(errorMessage);
+    }
+  }
+
+  @override
+  Future<void> changePasswordWithOtp({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
+    try {
+      await _apiClient.post(
+        ApiEndpoints.changePasswordWithOtp,
+        data: {
+          'email': email,
+          'otp': otp,
+          'newPassword': newPassword,
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Failed to change password.';
+      final responseData = e.response?.data;
+      if (responseData is Map) {
+        errorMessage = responseData['message'] ?? errorMessage;
+      }
+      throw Exception(errorMessage);
+    }
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      await _apiClient.patch(
+        ApiEndpoints.changePassword,
+        data: {
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+        },
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Failed to change password.';
+      final responseData = e.response?.data;
+      if (responseData is Map) {
+        errorMessage = responseData['message'] ?? errorMessage;
+      }
+      throw Exception(errorMessage);
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await _apiClient.delete(ApiEndpoints.logout);
+    } on DioException catch (e) {
+      String errorMessage = 'Logout failed.';
+      final responseData = e.response?.data;
+      if (responseData is Map) {
+        errorMessage = responseData['message'] ?? errorMessage;
+      }
+      throw Exception(errorMessage);
+    }
+  }
+}

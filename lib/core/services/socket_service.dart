@@ -62,7 +62,7 @@ class SocketService {
       io.OptionBuilder()
           .setTransports(['websocket', 'polling'])
           .setExtraHeaders({'Authorization': 'Bearer $sessionId'})
-          .setAuth({'token': sessionId})
+          .setAuth({'sessionId': sessionId})
           .enableAutoConnect()
           .enableReconnection()
           .setReconnectionAttempts(10)
@@ -176,35 +176,65 @@ class SocketService {
     required String conversationId,
     required String content,
     String messageType = 'text',
-    List<String>? mediaUrls,
+    List<String>? mediaKeys,
     String? replyToId,
     String? sharedPostId,
     String? sharedReelId,
   }) {
     _socket?.emit('message:send', {
-      'conversation_id': conversationId,
+      'conversationId': conversationId,
       'content': content,
-      'message_type': messageType,
-      if (mediaUrls != null) 'media_urls': mediaUrls,
-      if (replyToId != null) 'reply_to': replyToId,
-      if (sharedPostId != null) 'shared_post_id': sharedPostId,
-      if (sharedReelId != null) 'shared_reel_id': sharedReelId,
+      'messageType': messageType,
+      if (mediaKeys != null) 'mediaKeys': mediaKeys,
+      if (replyToId != null) 'replyTo': replyToId,
+      if (sharedPostId != null) 'sharedPostId': sharedPostId,
+      if (sharedReelId != null) 'sharedReelId': sharedReelId,
     });
+  }
+
+  /// Join a conversation room
+  void joinConversation(String conversationId) {
+    _socket?.emit('conversation:join', {'conversationId': conversationId});
+  }
+
+  /// Leave a conversation room
+  void leaveConversation(String conversationId) {
+    _socket?.emit('conversation:leave', {'conversationId': conversationId});
   }
 
   /// Start typing indicator
   void startTyping(String conversationId) {
-    _socket?.emit('typing:start', {'conversation_id': conversationId});
+    _socket?.emit('typing:start', {'conversationId': conversationId});
   }
 
   /// Stop typing indicator
   void stopTyping(String conversationId) {
-    _socket?.emit('typing:stop', {'conversation_id': conversationId});
+    _socket?.emit('typing:stop', {'conversationId': conversationId});
   }
 
   /// Mark messages as read
   void markRead(String conversationId) {
-    _socket?.emit('messages:read', {'conversation_id': conversationId});
+    _socket?.emit('messages:read', {'conversationId': conversationId});
+  }
+
+  /// React to a message
+  void reactToMessage(String messageId, String emoji) {
+    _socket?.emit('message:react', {'messageId': messageId, 'emoji': emoji});
+  }
+
+  /// Remove reaction from a message
+  void unreactToMessage(String messageId) {
+    _socket?.emit('message:unreact', {'messageId': messageId});
+  }
+
+  /// Delete a message
+  void deleteMessage(String messageId) {
+    _socket?.emit('message:delete', {'messageId': messageId});
+  }
+
+  /// Check if a user is online
+  void checkUserOnline(String userId) {
+    _socket?.emit('user:check-online', {'userId': userId});
   }
 
   /// Disconnect socket

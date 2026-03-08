@@ -41,6 +41,9 @@ dependencies:
   # Local storage for tokens
   shared_preferences: ^2.2.2
 
+  # Secure storage
+  flutter_secure_storage: ^9.2.4
+
   # Value equality
   equatable: ^2.0.5
   connectivity_plus: ^7.0.0
@@ -50,6 +53,24 @@ dependencies:
   dartz: ^0.10.1
   image_picker: ^1.0.7
   http_parser: ^4.0.2
+
+  # Routing
+  go_router: ^14.8.1
+
+  # Real-time communication
+  socket_io_client: ^3.0.2
+
+  # Image caching
+  cached_network_image: ^3.4.1
+
+  # Grid layouts
+  flutter_staggered_grid_view: ^0.7.0
+
+  # Pull to refresh
+  pull_to_refresh_flutter3: ^2.0.2
+
+  # Relative timestamps
+  timeago: ^3.7.0
 
 dev_dependencies:
   flutter_test:

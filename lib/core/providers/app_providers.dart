@@ -166,9 +166,12 @@ class NotificationsNotifier extends Notifier<AsyncValue<List<AppNotification>>> 
 
     try {
       final service = ref.read(notificationServiceProvider);
-      final notifications =
-          await service.getNotifications(page: _page, limit: 20);
-      _unreadCount = await service.getUnreadCount();
+      final data = await service.getNotifications(page: _page, limit: 20);
+      final notifList = data['notifications'] ?? data['items'] ?? [];
+      final notifications = (notifList as List)
+          .map((json) => AppNotification.fromJson(json))
+          .toList();
+      _unreadCount = data['unread_count'] ?? await service.getUnreadCount();
 
       if (refresh || _page == 1) {
         state = AsyncValue.data(notifications);
