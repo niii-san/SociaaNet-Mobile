@@ -14,7 +14,7 @@ class PostRepository {
       final result = await _datasource.createPost(caption: caption, imagePaths: imagePaths, visibility: visibility);
       return Right(Post.fromJson(result));
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -23,7 +23,7 @@ class PostRepository {
       final result = await _datasource.getPost(postId);
       return Right(Post.fromJson(result));
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -32,7 +32,7 @@ class PostRepository {
       await _datasource.updatePostVisibility(postId, visibility);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -41,7 +41,7 @@ class PostRepository {
       await _datasource.recordView(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -50,7 +50,7 @@ class PostRepository {
       await _datasource.likePost(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -59,7 +59,7 @@ class PostRepository {
       await _datasource.unlikePost(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -68,7 +68,7 @@ class PostRepository {
       await _datasource.repostPost(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -77,7 +77,7 @@ class PostRepository {
       await _datasource.unrepostPost(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -86,7 +86,7 @@ class PostRepository {
       await _datasource.savePost(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -95,7 +95,7 @@ class PostRepository {
       await _datasource.unsavePost(postId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

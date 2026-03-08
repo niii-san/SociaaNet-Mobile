@@ -106,4 +106,17 @@ class UserService {
     );
     return response.data['data'] ?? response.data;
   }
+
+  Future<void> updateFullName(String fullName) => updateFullname(fullName);
+
+  Future<List<SearchUser>> searchUsersList(String query, {int page = 1}) async {
+    final data = await searchUsers(query, page: page);
+    final users = data['data'] as List? ?? data['users'] as List? ?? [];
+    return users.map((u) => SearchUser.fromJson(u as Map<String, dynamic>)).toList();
+  }
+
+  Future<UserProfile> getUserProfileDetail(String username) async {
+    final data = await getUserProfile(username);
+    return UserProfile.fromJson(data);
+  }
 }

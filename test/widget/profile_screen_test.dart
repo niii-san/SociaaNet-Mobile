@@ -8,7 +8,7 @@ void main() {
       expect(find.text('Profile'), findsOneWidget);
     });
     testWidgets('renders post grid', (tester) async {
-      await tester.pumpWidget(const MaterialApp(home: Scaffold(body: GridView.count(crossAxisCount: 3, children: []))));
+      await tester.pumpWidget(MaterialApp(home: Scaffold(body: GridView.count(crossAxisCount: 3, children: const []))));
       expect(find.byType(GridView), findsOneWidget);
     });
   });

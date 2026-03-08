@@ -152,9 +152,8 @@ class _MessagesTab extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    if (convo.createdAt != null)
-                      Text(
-                        timeago.format(DateTime.parse(convo.createdAt!), locale: 'en_short'),
+                    Text(
+                        timeago.format(convo.createdAt, locale: 'en_short'),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.outline, fontSize: 11),
                       ),
@@ -241,7 +240,7 @@ class _NewMessageSheet extends ConsumerStatefulWidget {
 }
 
 class _NewMessageSheetState extends ConsumerState<_NewMessageSheet> {
-  List<ChatFriend> _friends = [];
+  List<Map<String, dynamic>> _friends = [];
   bool _isLoading = true;
 
   @override
@@ -282,17 +281,17 @@ class _NewMessageSheetState extends ConsumerState<_NewMessageSheet> {
                           final friend = _friends[index];
                           return ListTile(
                             leading: UserAvatar(
-                              imageUrl: friend.fullAvatarUrl,
-                              fallbackName: friend.fullName,
+                              imageUrl: friend['avatar_url'],
+                              fallbackName: friend['full_name'] ?? '',
                               radius: 22,
                             ),
-                            title: Text(friend.fullName),
-                            subtitle: Text('@${friend.username}'),
+                            title: Text(friend['full_name'] ?? ''),
+                            subtitle: Text('@${friend['username'] ?? ''}'),
                             onTap: () async {
                               Navigator.pop(context);
                               try {
                                 final convo = await ref.read(chatServiceProvider)
-                                    .getOrCreateDirectConversation(friend.userId);
+                                    .getOrCreateDirectConversation(friend['_id'] ?? '');
                                 if (context.mounted) {
                                   context.push('/chat/${convo.conversationId}');
                                 }

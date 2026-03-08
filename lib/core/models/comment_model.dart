@@ -1,3 +1,5 @@
+import 'post_model.dart';
+
 class Comment {
   final String id;
   final String? postId;
@@ -12,6 +14,20 @@ class Comment {
   final String? parentId;
   final int repliesCount;
   final DateTime createdAt;
+
+  /// Alias for [id]
+  String get commentId => id;
+
+  /// Alias for [repliesCount]
+  int get replyCount => repliesCount;
+
+  /// Author info for display
+  PostAuthor get author => PostAuthor(
+    id: userId,
+    username: username ?? '',
+    fullName: fullName ?? '',
+    avatarUrl: userAvatar,
+  );
 
   Comment({
     required this.id,

@@ -112,7 +112,7 @@ class ChatViewModel extends Notifier<ChatState> {
     required String conversationId,
     required String content,
     String messageType = 'text',
-    List<String>? mediaUrls,
+    List<String>? mediaKeys,
   }) async {
     state = state.copyWith(status: ChatStatus.sending);
 
@@ -120,7 +120,7 @@ class ChatViewModel extends Notifier<ChatState> {
       conversationId: conversationId,
       content: content,
       messageType: messageType,
-      mediaUrls: mediaUrls,
+      mediaKeys: mediaKeys,
     );
 
     result.fold(
@@ -143,8 +143,8 @@ class ChatViewModel extends Notifier<ChatState> {
     );
   }
 
-  Future<void> deleteMessage(String conversationId, String messageId) async {
-    await _repository.deleteMessage(conversationId, messageId);
+  Future<void> deleteMessage(String messageId) async {
+    await _repository.deleteMessage(messageId);
     state = state.copyWith(
       messages: state.messages.where((m) => m.id != messageId).toList(),
     );

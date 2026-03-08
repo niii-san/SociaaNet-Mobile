@@ -164,7 +164,7 @@ class _NotificationItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    timeago.format(DateTime.parse(notification.createdAt)),
+                    timeago.format(notification.createdAt),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                       fontSize: 12,

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:sociaanet/core/errors/failures.dart';
+import 'package:sociaanet/core/error/failures.dart';
 import 'package:sociaanet/features/media/data/datasources/media_datasource.dart';
 
 class MediaRepository {
@@ -21,7 +21,7 @@ class MediaRepository {
       );
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -38,7 +38,7 @@ class MediaRepository {
       );
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -47,7 +47,7 @@ class MediaRepository {
       final result = await _datasource.uploadChatMedia(filePath);
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

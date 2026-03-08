@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:sociaanet/core/errors/failures.dart';
+import 'package:sociaanet/core/error/failures.dart';
 import 'package:sociaanet/core/models/settings_model.dart';
 import 'package:sociaanet/features/settings/data/datasources/settings_datasource.dart';
 
@@ -14,7 +14,7 @@ class SettingsRepository {
       final data = await _datasource.getSettings();
       return Right(UserSettings.fromJson(data['settings'] ?? data));
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -23,7 +23,7 @@ class SettingsRepository {
       await _datasource.updatePrivacy(settings);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -32,7 +32,7 @@ class SettingsRepository {
       await _datasource.updateNotifications(settings);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -41,7 +41,7 @@ class SettingsRepository {
       await _datasource.updateAppearance(settings);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -50,7 +50,7 @@ class SettingsRepository {
       await _datasource.updateFeed(settings);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -65,7 +65,7 @@ class SettingsRepository {
       );
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

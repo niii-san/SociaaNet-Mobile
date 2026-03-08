@@ -1,3 +1,28 @@
+/// Author info embedded in posts, comments, reels
+class PostAuthor {
+  final String id;
+  final String username;
+  final String fullName;
+  final String? avatarUrl;
+  final bool isEmailVerified;
+
+  const PostAuthor({
+    required this.id,
+    this.username = '',
+    required this.fullName,
+    this.avatarUrl,
+    this.isEmailVerified = false,
+  });
+
+  String? get fullAvatarUrl {
+    if (avatarUrl == null || avatarUrl!.isEmpty) return null;
+    var url = avatarUrl!;
+    if (url.contains('localhost')) url = url.replaceAll('localhost', '10.0.2.2');
+    if (!url.startsWith('http')) url = 'http://10.0.2.2:8000$url';
+    return url;
+  }
+}
+
 class Post {
   final String id;
   final String userId;
@@ -20,6 +45,24 @@ class Post {
   final bool commentsDisabled;
   final bool isSensitiveContent;
   final DateTime createdAt;
+
+  /// Alias for [id]
+  String get postId => id;
+
+  /// Author info for display
+  PostAuthor get author => PostAuthor(
+    id: userId,
+    username: username ?? '',
+    fullName: fullName ?? '',
+    avatarUrl: userAvatar,
+  );
+
+  /// Returns a full media URL with host prefix
+  static String getFullMediaUrl(String url) {
+    if (url.contains('localhost')) url = url.replaceAll('localhost', '10.0.2.2');
+    if (!url.startsWith('http')) url = 'http://10.0.2.2:8000$url';
+    return url;
+  }
 
   Post({
     required this.id,
@@ -199,6 +242,73 @@ class FeedPost extends Post {
       isFollowing: json['is_following'] ?? true,
     );
   }
+
+  factory FeedPost.fromPost(Post p) {
+    return FeedPost(
+      id: p.id,
+      postId: p.id,
+      userId: p.userId,
+      username: p.username,
+      fullName: p.fullName,
+      userAvatar: p.userAvatar,
+      caption: p.caption,
+      mediaUrls: p.mediaUrls,
+      mediaType: p.mediaType,
+      hashtags: p.hashtags,
+      likesCount: p.likesCount,
+      commentsCount: p.commentsCount,
+      sharesCount: p.sharesCount,
+      repostsCount: p.repostsCount,
+      viewsCount: p.viewsCount,
+      visibility: p.visibility,
+      isLiked: p.isLiked,
+      isSaved: p.isSaved,
+      isReposted: p.isReposted,
+      commentsDisabled: p.commentsDisabled,
+      isSensitiveContent: p.isSensitiveContent,
+      createdAt: p.createdAt,
+    );
+  }
+
+  @override
+  FeedPost copyWith({
+    String? caption,
+    int? likesCount,
+    int? commentsCount,
+    int? sharesCount,
+    int? repostsCount,
+    int? viewsCount,
+    String? visibility,
+    bool? isLiked,
+    bool? isSaved,
+    bool? isReposted,
+  }) {
+    return FeedPost(
+      id: id,
+      postId: postId,
+      userId: userId,
+      username: username,
+      fullName: fullName,
+      userAvatar: userAvatar,
+      caption: caption ?? this.caption,
+      mediaUrls: mediaUrls,
+      mediaType: mediaType,
+      hashtags: hashtags,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      sharesCount: sharesCount ?? this.sharesCount,
+      repostsCount: repostsCount ?? this.repostsCount,
+      viewsCount: viewsCount ?? this.viewsCount,
+      visibility: visibility ?? this.visibility,
+      isLiked: isLiked ?? this.isLiked,
+      isSaved: isSaved ?? this.isSaved,
+      isReposted: isReposted ?? this.isReposted,
+      commentsDisabled: commentsDisabled,
+      isSensitiveContent: isSensitiveContent,
+      createdAt: createdAt,
+      isFollowing: isFollowing,
+    );
+  }
 }
 
 class ExplorePost {
@@ -206,6 +316,12 @@ class ExplorePost {
   final String? thumbnailUrl;
   final String mediaType;
   final int likesCount;
+
+  /// Alias for [id]
+  String get postId => id;
+
+  /// Alias for [thumbnailUrl]
+  String? get mediaUrl => thumbnailUrl;
 
   ExplorePost({
     required this.id,

@@ -36,9 +36,17 @@ class PostViewModel extends Notifier<PostDetailState> {
     );
   }
 
-  Future<Post?> createPost(Map<String, dynamic> data, {List<String>? mediaPaths}) async {
+  Future<Post?> createPost({
+    required String caption,
+    required List<String> imagePaths,
+    String? visibility,
+  }) async {
     state = state.copyWith(isLoading: true, error: null);
-    final result = await _repository.createPost(data, mediaPaths: mediaPaths);
+    final result = await _repository.createPost(
+      caption: caption,
+      imagePaths: imagePaths,
+      visibility: visibility,
+    );
     return result.fold(
       (failure) {
         state = state.copyWith(isLoading: false, error: failure.toString());
@@ -51,29 +59,29 @@ class PostViewModel extends Notifier<PostDetailState> {
     );
   }
 
-  Future<bool> deletePost(String postId) async {
-    final result = await _repository.deletePost(postId);
-    return result.fold(
-      (failure) {
-        state = state.copyWith(error: failure.toString());
-        return false;
-      },
-      (_) => true,
-    );
-  }
-
   Future<void> toggleLike(String postId) async {
     final currentPost = state.post;
     if (currentPost == null) return;
 
-    final isLiked = currentPost.isLiked ?? false;
-    final result = isLiked
+    // Optimistic update
+    final wasLiked = currentPost.isLiked;
+    state = state.copyWith(
+      post: currentPost.copyWith(
+        isLiked: !wasLiked,
+        likesCount: wasLiked ? currentPost.likesCount - 1 : currentPost.likesCount + 1,
+      ),
+    );
+
+    final result = wasLiked
         ? await _repository.unlikePost(postId)
         : await _repository.likePost(postId);
 
     result.fold(
-      (failure) => state = state.copyWith(error: failure.toString()),
-      (updatedPost) => state = state.copyWith(post: updatedPost),
+      (failure) {
+        // Revert on failure
+        state = state.copyWith(post: currentPost, error: failure.toString());
+      },
+      (_) {},
     );
   }
 
@@ -81,14 +89,21 @@ class PostViewModel extends Notifier<PostDetailState> {
     final currentPost = state.post;
     if (currentPost == null) return;
 
-    final isSaved = currentPost.isSaved ?? false;
-    final result = isSaved
+    // Optimistic update
+    final wasSaved = currentPost.isSaved;
+    state = state.copyWith(
+      post: currentPost.copyWith(isSaved: !wasSaved),
+    );
+
+    final result = wasSaved
         ? await _repository.unsavePost(postId)
         : await _repository.savePost(postId);
 
     result.fold(
-      (failure) => state = state.copyWith(error: failure.toString()),
-      (updatedPost) => state = state.copyWith(post: updatedPost),
+      (failure) {
+        state = state.copyWith(post: currentPost, error: failure.toString());
+      },
+      (_) {},
     );
   }
 }

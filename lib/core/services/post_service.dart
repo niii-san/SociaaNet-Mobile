@@ -100,4 +100,37 @@ class PostService {
       '${ApiEndpoints.baseUrl}${ApiEndpoints.savePost(postId)}',
     );
   }
+
+  Future<Post> getPostById(String postId) => getPost(postId);
+
+  Future<Map<String, dynamic>> likeReel(String reelId) async {
+    final response = await _apiClient.post(
+      '${ApiEndpoints.baseUrl}${ApiEndpoints.likeReel(reelId)}',
+    );
+    return response.data['data'] ?? response.data;
+  }
+
+  Future<Map<String, dynamic>> unlikeReel(String reelId) async {
+    final response = await _apiClient.delete(
+      '${ApiEndpoints.baseUrl}${ApiEndpoints.likeReel(reelId)}',
+    );
+    return response.data['data'] ?? response.data;
+  }
+
+  Future<Reel> createReel({
+    String? caption,
+    required String videoPath,
+    String visibility = 'public',
+  }) async {
+    final formData = FormData.fromMap({
+      if (caption != null) 'caption': caption,
+      'visibility': visibility,
+      'video': await MultipartFile.fromFile(videoPath),
+    });
+    final response = await _apiClient.uploadFile(
+      '${ApiEndpoints.baseUrl}${ApiEndpoints.mediaReel}',
+      formData: formData,
+    );
+    return Reel.fromJson(response.data['data'] ?? response.data);
+  }
 }

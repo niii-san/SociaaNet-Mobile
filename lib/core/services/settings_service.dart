@@ -53,4 +53,18 @@ class SettingsService {
       },
     );
   }
+
+  Future<void> logoutSession(String sessionId) async {
+    await _apiClient.delete(
+      '${ApiEndpoints.baseUrl}${ApiEndpoints.logout}',
+      data: {'sessionId': sessionId},
+    );
+  }
+
+  Future<void> logoutAllSessions() async {
+    await _apiClient.delete(
+      '${ApiEndpoints.baseUrl}${ApiEndpoints.logout}',
+      data: {'allSessions': true},
+    );
+  }
 }

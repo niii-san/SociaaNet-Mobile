@@ -78,8 +78,7 @@ class _FollowRequestsScreenState extends ConsumerState<FollowRequestsScreen>
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         itemCount: _incoming.length,
                         itemBuilder: (context, index) {
-                          final request = _incoming[index];
-                          final user = request.follower;
+                          final user = _incoming[index];
                           return ListTile(
                             leading: UserAvatar(
                               imageUrl: user.fullAvatarUrl,
@@ -147,8 +146,7 @@ class _FollowRequestsScreenState extends ConsumerState<FollowRequestsScreen>
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         itemCount: _outgoing.length,
                         itemBuilder: (context, index) {
-                          final request = _outgoing[index];
-                          final user = request.following;
+                          final user = _outgoing[index];
                           return ListTile(
                             leading: UserAvatar(
                               imageUrl: user.fullAvatarUrl,

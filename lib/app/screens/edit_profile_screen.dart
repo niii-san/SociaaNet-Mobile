@@ -33,10 +33,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final user = ref.read(currentUserProvider);
     if (user != null) {
       _fullNameController.text = user.fullName;
-      _usernameController.text = user.username;
+      _usernameController.text = user.username ?? '';
       // Bio is not on User model, but on UserProfile. We'll load it.
       _initialized = true;
-      _loadProfile(user.username);
+      _loadProfile(user.username ?? user.fullName);
     }
   }
 
@@ -45,7 +45,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final service = ref.read(userServiceProvider);
       final profile = await service.getUserProfile(username);
       if (mounted) {
-        _bioController.text = profile.bio ?? '';
+        _bioController.text = profile['bio'] ?? '';
       }
     } catch (_) {}
   }

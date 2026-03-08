@@ -7,6 +7,12 @@ class ChatConversation {
   final bool isGroup;
   final String? groupName;
 
+  /// Alias for [id]
+  String get conversationId => id;
+
+  /// Alias for [updatedAt] (conversations don't have a separate createdAt from API)
+  DateTime get createdAt => updatedAt;
+
   ChatConversation({
     required this.id,
     required this.participants,
@@ -16,6 +22,34 @@ class ChatConversation {
     this.isGroup = false,
     this.groupName,
   });
+
+  /// Get the display name for this conversation relative to the given userId
+  String getDisplayName(String currentUserId) {
+    if (isGroup) return groupName ?? 'Group';
+    final other = getOtherParticipant(currentUserId);
+    return other?.fullName ?? 'Unknown';
+  }
+
+  /// Get the display avatar for this conversation relative to the given userId
+  String? getDisplayAvatar(String currentUserId) {
+    if (isGroup) return null;
+    final other = getOtherParticipant(currentUserId);
+    if (other?.avatarUrl == null) return null;
+    var url = other!.avatarUrl!;
+    if (url.contains('localhost')) url = url.replaceAll('localhost', '10.0.2.2');
+    if (!url.startsWith('http')) url = 'http://10.0.2.2:8000$url';
+    return url;
+  }
+
+  /// Get the other participant in a direct conversation
+  ChatParticipant? getOtherParticipant(String currentUserId) {
+    if (participants.isEmpty) return null;
+    try {
+      return participants.firstWhere((p) => p.userId != currentUserId);
+    } catch (_) {
+      return participants.first;
+    }
+  }
 
   factory ChatConversation.fromJson(Map<String, dynamic> json) {
     return ChatConversation(

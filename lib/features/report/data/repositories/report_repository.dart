@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:sociaanet/core/errors/failures.dart';
+import 'package:sociaanet/core/error/failures.dart';
 import 'package:sociaanet/features/report/data/datasources/report_datasource.dart';
 
 class ReportRepository {
@@ -23,7 +23,7 @@ class ReportRepository {
       );
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

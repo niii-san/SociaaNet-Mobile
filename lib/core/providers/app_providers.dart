@@ -266,16 +266,6 @@ class SettingsNotifier extends Notifier<AsyncValue<UserSettings>> {
       rethrow;
     }
   }
-
-  Future<void> updateSecurity(Map<String, dynamic> settings) async {
-    try {
-      final service = ref.read(settingsServiceProvider);
-      await service.updateSecuritySettings(settings);
-      await loadSettings();
-    } catch (_) {
-      rethrow;
-    }
-  }
 }
 
 final settingsProvider =

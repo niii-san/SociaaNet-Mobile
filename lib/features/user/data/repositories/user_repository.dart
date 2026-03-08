@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:sociaanet/core/models/user_model.dart';
-import 'package:sociaanet/features/auth/data/model/auth_api_model.dart';
 import 'package:sociaanet/features/user/data/datasources/user_datasource.dart';
 
 /// Repository for user operations

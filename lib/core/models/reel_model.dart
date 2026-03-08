@@ -1,3 +1,5 @@
+import 'post_model.dart';
+
 class Reel {
   final String id;
   final String userId;
@@ -107,6 +109,128 @@ class Reel {
     bool? isReposted,
   }) {
     return Reel(
+      id: id,
+      userId: userId,
+      username: username,
+      fullName: fullName,
+      userAvatar: userAvatar,
+      videoUrl: videoUrl,
+      thumbnailUrl: thumbnailUrl,
+      caption: caption,
+      audioName: audioName,
+      hashtags: hashtags,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      sharesCount: sharesCount,
+      repostsCount: repostsCount ?? this.repostsCount,
+      viewsCount: viewsCount ?? this.viewsCount,
+      visibility: visibility,
+      isLiked: isLiked ?? this.isLiked,
+      isSaved: isSaved ?? this.isSaved,
+      isReposted: isReposted ?? this.isReposted,
+      createdAt: createdAt,
+    );
+  }
+
+  String get reelId => id;
+
+  PostAuthor get author => PostAuthor(
+        id: userId,
+        username: username ?? '',
+        fullName: fullName ?? '',
+        avatarUrl: userAvatar,
+      );
+}
+
+class ReelAuthor {
+  final String id;
+  final String username;
+  final String fullName;
+  final String? avatarUrl;
+
+  const ReelAuthor({
+    required this.id,
+    required this.username,
+    required this.fullName,
+    this.avatarUrl,
+  });
+
+  String? get fullAvatarUrl {
+    if (avatarUrl == null || avatarUrl!.isEmpty) return null;
+    if (avatarUrl!.startsWith('http')) return avatarUrl;
+    return 'http://10.0.2.2:8000$avatarUrl';
+  }
+}
+
+class FeedReel extends Reel {
+  FeedReel({
+    required super.id,
+    required super.userId,
+    super.username,
+    super.fullName,
+    super.userAvatar,
+    required super.videoUrl,
+    super.thumbnailUrl,
+    super.caption,
+    super.audioName,
+    super.hashtags,
+    super.likesCount,
+    super.commentsCount,
+    super.sharesCount,
+    super.repostsCount,
+    super.viewsCount,
+    super.visibility,
+    super.isLiked,
+    super.isSaved,
+    super.isReposted,
+    required super.createdAt,
+  });
+
+  factory FeedReel.fromJson(Map<String, dynamic> json) {
+    final reel = Reel.fromJson(json);
+    return FeedReel(
+      id: reel.id,
+      userId: reel.userId,
+      username: reel.username,
+      fullName: reel.fullName,
+      userAvatar: reel.userAvatar,
+      videoUrl: reel.videoUrl,
+      thumbnailUrl: reel.thumbnailUrl,
+      caption: reel.caption,
+      audioName: reel.audioName,
+      hashtags: reel.hashtags,
+      likesCount: reel.likesCount,
+      commentsCount: reel.commentsCount,
+      sharesCount: reel.sharesCount,
+      repostsCount: reel.repostsCount,
+      viewsCount: reel.viewsCount,
+      visibility: reel.visibility,
+      isLiked: reel.isLiked,
+      isSaved: reel.isSaved,
+      isReposted: reel.isReposted,
+      createdAt: reel.createdAt,
+    );
+  }
+
+  @override
+  PostAuthor get author => PostAuthor(
+        id: userId,
+        username: username ?? '',
+        fullName: fullName ?? '',
+        avatarUrl: userAvatar,
+      );
+
+  @override
+  FeedReel copyWith({
+    int? likesCount,
+    int? commentsCount,
+    int? repostsCount,
+    int? viewsCount,
+    bool? isLiked,
+    bool? isSaved,
+    bool? isReposted,
+  }) {
+    return FeedReel(
       id: id,
       userId: userId,
       username: username,

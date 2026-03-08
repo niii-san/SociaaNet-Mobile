@@ -16,7 +16,7 @@ class CommentRepository {
       final comments = (commentsList as List).map((json) => Comment.fromJson(json)).toList();
       return Right(comments);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -25,7 +25,7 @@ class CommentRepository {
       final result = await _datasource.addComment(targetId, content, targetType: targetType);
       return Right(Comment.fromJson(result));
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -34,7 +34,7 @@ class CommentRepository {
       final result = await _datasource.replyToComment(commentId, content);
       return Right(Comment.fromJson(result));
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -43,7 +43,7 @@ class CommentRepository {
       await _datasource.deleteComment(commentId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -52,7 +52,7 @@ class CommentRepository {
       await _datasource.likeComment(commentId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -61,7 +61,7 @@ class CommentRepository {
       await _datasource.unlikeComment(commentId);
       return const Right(null);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -72,7 +72,7 @@ class CommentRepository {
       final replies = (repliesList as List).map((json) => Comment.fromJson(json)).toList();
       return Right(replies);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

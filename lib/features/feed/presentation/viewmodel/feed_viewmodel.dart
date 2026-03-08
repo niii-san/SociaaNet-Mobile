@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sociaanet/core/models/feed_model.dart';
 import 'package:sociaanet/core/models/post_model.dart';
 import 'package:sociaanet/core/models/user_model.dart';
 import 'package:sociaanet/features/feed/data/repositories/feed_repository.dart';

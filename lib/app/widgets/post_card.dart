@@ -249,7 +249,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           ],
                         ),
                         Text(
-                          timeago.format(DateTime.parse(_post.createdAt)),
+                          timeago.format(_post.createdAt),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),

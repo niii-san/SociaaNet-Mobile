@@ -62,7 +62,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     try {
       final service = ref.read(postServiceProvider);
       await service.createPost(
-        imagePaths: _selectedImages.map((f) => f.path).toList(),
+        imageFiles: _selectedImages,
         caption: _captionController.text.isNotEmpty ? _captionController.text : null,
       );
 

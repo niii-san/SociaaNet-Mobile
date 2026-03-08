@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:sociaanet/core/errors/failures.dart';
+import 'package:sociaanet/core/error/failures.dart';
 import 'package:sociaanet/core/models/notification_model.dart';
 import 'package:sociaanet/features/notification/data/datasources/notification_datasource.dart';
 
@@ -21,7 +21,7 @@ class NotificationRepository {
         'pagination': result['pagination'],
       });
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -30,7 +30,7 @@ class NotificationRepository {
       final count = await _datasource.getUnreadCount();
       return Right(count);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -39,7 +39,7 @@ class NotificationRepository {
       await _datasource.markAllAsRead();
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -48,7 +48,7 @@ class NotificationRepository {
       await _datasource.markAsRead(notificationId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -57,7 +57,7 @@ class NotificationRepository {
       await _datasource.deleteNotification(notificationId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -66,7 +66,7 @@ class NotificationRepository {
       await _datasource.deleteAllNotifications();
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

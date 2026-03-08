@@ -15,7 +15,7 @@ class FeedRepository {
       final result = await _datasource.getHomeFeed(page: page, limit: limit);
       return Right(FeedResponse.fromJson(result));
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -24,7 +24,7 @@ class FeedRepository {
       final result = await _datasource.getExploreFeed(page: page, limit: limit);
       return Right(FeedResponse.fromJson(result));
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -33,7 +33,7 @@ class FeedRepository {
       final result = await _datasource.getReelsFeed(page: page, limit: limit);
       return Right(result);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -44,7 +44,7 @@ class FeedRepository {
       final users = (usersList as List).map((json) => SuggestedUser.fromJson(json)).toList();
       return Right(users);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

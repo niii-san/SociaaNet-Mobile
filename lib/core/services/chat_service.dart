@@ -145,4 +145,7 @@ class ChatService {
       '${ApiEndpoints.baseUrl}${ApiEndpoints.chatRejectRequest(conversationId)}',
     );
   }
+
+  Future<ChatConversation> getConversationById(String conversationId) =>
+      getConversation(conversationId);
 }

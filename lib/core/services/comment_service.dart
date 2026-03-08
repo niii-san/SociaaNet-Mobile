@@ -96,4 +96,20 @@ class CommentService {
       '${ApiEndpoints.baseUrl}${ApiEndpoints.deleteComment(commentId)}',
     );
   }
+
+  Future<List<Comment>> getPostComments(String postId, {int page = 1, int limit = 20}) async {
+    final result = await getComments(postId, page: page, limit: limit, targetType: 'post');
+    return result['comments'] as List<Comment>? ?? [];
+  }
+
+  Future<List<Comment>> getReelComments(String reelId, {int page = 1, int limit = 20}) async {
+    final result = await getComments(reelId, page: page, limit: limit, targetType: 'reel');
+    return result['comments'] as List<Comment>? ?? [];
+  }
+
+  Future<Comment> addPostComment(String postId, String content) =>
+      addComment(postId, content, targetType: 'post');
+
+  Future<Comment> addReelComment(String reelId, String content) =>
+      addComment(reelId, content, targetType: 'reel');
 }

@@ -11,7 +11,7 @@ final _myProfileProvider = FutureProvider<UserProfile>((ref) async {
   final currentUser = ref.watch(currentUserProvider);
   if (currentUser == null) throw Exception('Not logged in');
   final service = ref.read(userServiceProvider);
-  return service.getUserProfile(currentUser.username);
+  return service.getUserProfileDetail(currentUser.username ?? currentUser.fullName);
 });
 
 class ProfileScreen extends ConsumerWidget {
@@ -181,7 +181,7 @@ class _PostsGrid extends StatelessWidget {
           onTap: () => context.push('/posts/${post.postId}'),
           child: post.mediaUrls.isNotEmpty
               ? CachedNetworkImage(
-                  imageUrl: FeedPost.getFullMediaUrl(post.mediaUrls.first),
+                  imageUrl: Post.getFullMediaUrl(post.mediaUrls.first),
                   fit: BoxFit.cover,
                   placeholder: (_, __) => Container(
                     color: Theme.of(context).colorScheme.surfaceContainerHighest),

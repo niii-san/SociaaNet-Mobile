@@ -386,7 +386,7 @@ class _CommentItem extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      timeago.format(DateTime.parse(comment.createdAt)),
+                      timeago.format(comment.createdAt),
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                       ),

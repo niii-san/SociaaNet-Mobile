@@ -1,78 +1,57 @@
 import 'package:sociaanet/core/api/api_client.dart';
 import 'package:sociaanet/core/api/api_endpoints.dart';
+import 'package:sociaanet/core/models/models.dart';
 
 class ActivityService {
   final ApiClient _apiClient = ApiClient.instance;
 
-  Future<Map<String, dynamic>> getActivities({int page = 1, int limit = 20}) async {
-    final response = await _apiClient.get(
-      '${ApiEndpoints.baseUrl}${ApiEndpoints.userActivities}',
-      queryParameters: {'page': page, 'limit': limit},
-    );
-    final data = response.data['data'] ?? response.data;
-    return {
-      'activities': (data['activities'] as List?)?.cast<Map<String, dynamic>>() ?? [],
-      'pagination': data['pagination'],
-    };
+  List<HistoryItem> _parseItems(List? items) {
+    if (items == null) return [];
+    return items.map((e) => HistoryItem.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<Map<String, dynamic>> getLikeHistory({int page = 1, int limit = 20}) async {
+  Future<List<HistoryItem>> getLikeHistory({int page = 1, int limit = 20}) async {
     final response = await _apiClient.get(
       '${ApiEndpoints.baseUrl}${ApiEndpoints.userHistoryLikes}',
       queryParameters: {'page': page, 'limit': limit},
     );
     final data = response.data['data'] ?? response.data;
-    return {
-      'likes': (data['likes'] as List?)?.cast<Map<String, dynamic>>() ?? [],
-      'pagination': data['pagination'],
-    };
+    return _parseItems(data['likes'] as List?);
   }
 
-  Future<Map<String, dynamic>> getCommentHistory({int page = 1, int limit = 20}) async {
+  Future<List<HistoryItem>> getCommentHistory({int page = 1, int limit = 20}) async {
     final response = await _apiClient.get(
       '${ApiEndpoints.baseUrl}${ApiEndpoints.userHistoryComments}',
       queryParameters: {'page': page, 'limit': limit},
     );
     final data = response.data['data'] ?? response.data;
-    return {
-      'comments': (data['comments'] as List?)?.cast<Map<String, dynamic>>() ?? [],
-      'pagination': data['pagination'],
-    };
+    return _parseItems(data['comments'] as List?);
   }
 
-  Future<Map<String, dynamic>> getWatchHistory({int page = 1, int limit = 20}) async {
+  Future<List<HistoryItem>> getWatchHistory({int page = 1, int limit = 20}) async {
     final response = await _apiClient.get(
       '${ApiEndpoints.baseUrl}${ApiEndpoints.userHistoryWatches}',
       queryParameters: {'page': page, 'limit': limit},
     );
     final data = response.data['data'] ?? response.data;
-    return {
-      'watches': (data['watches'] as List?)?.cast<Map<String, dynamic>>() ?? [],
-      'pagination': data['pagination'],
-    };
+    return _parseItems(data['watches'] as List?);
   }
 
-  Future<Map<String, dynamic>> getRepostHistory({int page = 1, int limit = 20}) async {
+  Future<List<HistoryItem>> getRepostHistory({int page = 1, int limit = 20}) async {
     final response = await _apiClient.get(
       '${ApiEndpoints.baseUrl}${ApiEndpoints.userHistoryReposts}',
       queryParameters: {'page': page, 'limit': limit},
     );
     final data = response.data['data'] ?? response.data;
-    return {
-      'reposts': (data['reposts'] as List?)?.cast<Map<String, dynamic>>() ?? [],
-      'pagination': data['pagination'],
-    };
+    return _parseItems(data['reposts'] as List?);
   }
 
-  Future<Map<String, dynamic>> getSavedItems({int page = 1, int limit = 20}) async {
+  Future<List<HistoryItem>> getSavedItems({int page = 1, int limit = 20}) async {
     final response = await _apiClient.get(
       '${ApiEndpoints.baseUrl}${ApiEndpoints.userSaved}',
       queryParameters: {'page': page, 'limit': limit},
     );
     final data = response.data['data'] ?? response.data;
-    return {
-      'saved': (data['saved'] as List?)?.cast<Map<String, dynamic>>() ?? [],
-      'pagination': data['pagination'],
-    };
+    return _parseItems(data['saved'] as List?);
   }
 }

@@ -1,4 +1,6 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sociaanet/core/error/failures.dart';
 import 'package:sociaanet/core/models/comment_model.dart';
 import 'package:sociaanet/features/comment/data/repositories/comment_repository.dart';
 
@@ -74,14 +76,19 @@ class CommentViewModel extends Notifier<CommentState> {
   }
 
   Future<void> addComment(String postId, String content, {String? parentId}) async {
-    final result = await _repository.addComment(postId, content, parentId: parentId);
+    final Either<Failure, Comment> result;
+    if (parentId != null) {
+      result = await _repository.replyToComment(parentId, content);
+    } else {
+      result = await _repository.addComment(postId, content);
+    }
     result.fold(
       (failure) => state = state.copyWith(error: failure.toString()),
       (comment) {
         if (parentId != null) {
           final updatedComments = state.comments.map((c) {
             if (c.id == parentId) {
-              return c.copyWith(replyCount: (c.replyCount ?? 0) + 1);
+              return c.copyWith(repliesCount: c.repliesCount + 1);
             }
             return c;
           }).toList();
@@ -93,8 +100,8 @@ class CommentViewModel extends Notifier<CommentState> {
     );
   }
 
-  Future<void> deleteComment(String postId, String commentId) async {
-    final result = await _repository.deleteComment(postId, commentId);
+  Future<void> deleteComment(String commentId) async {
+    final result = await _repository.deleteComment(commentId);
     result.fold(
       (failure) => state = state.copyWith(error: failure.toString()),
       (_) => state = state.copyWith(
@@ -108,19 +115,28 @@ class CommentViewModel extends Notifier<CommentState> {
     if (commentIndex == -1) return;
 
     final comment = state.comments[commentIndex];
-    final isLiked = comment.isLiked ?? false;
+    final wasLiked = comment.isLiked;
 
-    final result = isLiked
+    // Optimistic update
+    final updatedComments = List<Comment>.from(state.comments);
+    updatedComments[commentIndex] = comment.copyWith(
+      isLiked: !wasLiked,
+      likesCount: wasLiked ? comment.likesCount - 1 : comment.likesCount + 1,
+    );
+    state = state.copyWith(comments: updatedComments);
+
+    final result = wasLiked
         ? await _repository.unlikeComment(commentId)
         : await _repository.likeComment(commentId);
 
     result.fold(
-      (failure) => state = state.copyWith(error: failure.toString()),
-      (updatedComment) {
-        final updatedComments = List<Comment>.from(state.comments);
-        updatedComments[commentIndex] = updatedComment;
-        state = state.copyWith(comments: updatedComments);
+      (failure) {
+        // Revert on failure
+        final revertComments = List<Comment>.from(state.comments);
+        revertComments[commentIndex] = comment;
+        state = state.copyWith(comments: revertComments, error: failure.toString());
       },
+      (_) {},
     );
   }
 }

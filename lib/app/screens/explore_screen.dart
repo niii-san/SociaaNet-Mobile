@@ -34,7 +34,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     setState(() => _isSearchLoading = true);
     try {
       final service = ref.read(userServiceProvider);
-      final results = await service.searchUsers(query);
+      final results = await service.searchUsersList(query);
       if (mounted) setState(() { _searchResults = results; _isSearchLoading = false; });
     } catch (_) {
       if (mounted) setState(() => _isSearchLoading = false);
@@ -154,9 +154,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 onTap: () => context.push('/posts/${post.postId}'),
                 child: AspectRatio(
                   aspectRatio: index % 5 == 0 ? 0.8 : 1.0,
-                  child: post.mediaUrl.isNotEmpty
+                  child: (post.mediaUrl ?? '').isNotEmpty
                       ? CachedNetworkImage(
-                          imageUrl: FeedPost.getFullMediaUrl(post.mediaUrl),
+                          imageUrl: Post.getFullMediaUrl(post.mediaUrl!),
                           fit: BoxFit.cover,
                           placeholder: (_, __) => Container(
                             color: theme.colorScheme.surfaceContainerHighest),

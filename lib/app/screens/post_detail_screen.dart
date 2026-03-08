@@ -28,7 +28,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     try {
       final service = ref.read(postServiceProvider);
       final post = await service.getPostById(widget.postId);
-      if (mounted) setState(() { _post = post; _isLoading = false; });
+      if (mounted) setState(() { _post = FeedPost.fromPost(post); _isLoading = false; });
     } catch (e) {
       if (mounted) setState(() { _error = e.toString(); _isLoading = false; });
     }

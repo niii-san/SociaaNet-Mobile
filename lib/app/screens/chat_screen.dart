@@ -109,7 +109,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     try {
       final chatService = ref.read(chatServiceProvider);
       final msg = await chatService.sendMessage(
-        widget.conversationId,
+        conversationId: widget.conversationId,
         content: text,
       );
       setState(() {
@@ -272,7 +272,7 @@ class _MessageBubble extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              timeago.format(DateTime.parse(message.createdAt)),
+              timeago.format(message.createdAt),
               style: TextStyle(
                 fontSize: 10,
                 color: isMe

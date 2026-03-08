@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 /// User profile provider (family - by username)
 final _userProfileProvider = FutureProvider.family<UserProfile, String>((ref, username) async {
   final service = ref.read(userServiceProvider);
-  return service.getUserProfile(username);
+  return service.getUserProfileDetail(username);
 });
 
 class UserProfileScreen extends ConsumerWidget {
@@ -59,7 +59,7 @@ class _UserProfileContentState extends ConsumerState<_UserProfileContent> {
         setState(() => _followState = null);
       } else {
         await service.followUser(widget.profile.userId);
-        setState(() => _followState = widget.profile.isPrivateAccount ? 'requested' : 'following');
+        setState(() => _followState = widget.profile.isPrivate ? 'requested' : 'following');
       }
     } catch (_) {}
   }
@@ -211,7 +211,7 @@ class _PostsGrid extends StatelessWidget {
           onTap: () => context.push('/posts/${post.postId}'),
           child: post.mediaUrls.isNotEmpty
               ? CachedNetworkImage(
-                  imageUrl: FeedPost.getFullMediaUrl(post.mediaUrls.first),
+                  imageUrl: Post.getFullMediaUrl(post.mediaUrls.first),
                   fit: BoxFit.cover,
                   placeholder: (_, __) => Container(
                       color: Theme.of(context).colorScheme.surfaceContainerHighest),

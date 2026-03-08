@@ -21,12 +21,16 @@ class FeedService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> getReelsFeed({int page = 1, int limit = 10}) async {
+  Future<List<FeedReel>> getReelsFeed({int page = 1, int limit = 10}) async {
     final response = await _apiClient.get(
       '${ApiEndpoints.baseUrl}${ApiEndpoints.feedReels}',
       queryParameters: {'page': page, 'limit': limit},
     );
-    return response.data;
+    final data = response.data['data'] ?? response.data;
+    return (data['reels'] as List?)
+            ?.map((r) => FeedReel.fromJson(r as Map<String, dynamic>))
+            .toList() ??
+        [];
   }
 
   Future<List<SuggestedUser>> getSuggestedUsers({int limit = 5}) async {

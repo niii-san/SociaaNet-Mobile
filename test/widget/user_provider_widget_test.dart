@@ -10,12 +10,12 @@ void main() {
         (WidgetTester tester) async {
       // Arrange
       final testUser = User(
-        userId: 'test123',
+        id: 'test123',
         fullName: 'Test User',
         username: 'testuser',
         emailAddress: 'test@example.com',
         avatarUrl: null,
-        createdAt: '2024-01-01T00:00:00Z',
+        createdAt: DateTime.parse('2024-01-01T00:00:00Z'),
       );
 
       final container = ProviderContainer();
@@ -103,11 +103,11 @@ void main() {
       // Update user
       container.read(currentUserProvider.notifier).setUser(
             User(
-              userId: 'new123',
+              id: 'new123',
               fullName: 'New User',
               username: 'newuser',
               emailAddress: 'new@example.com',
-              createdAt: '2024-02-01T00:00:00Z',
+              createdAt: DateTime.parse('2024-02-01T00:00:00Z'),
             ),
           );
 
@@ -126,11 +126,11 @@ void main() {
 
       container.read(currentUserProvider.notifier).setUser(
             User(
-              userId: 'test123',
+              id: 'test123',
               fullName: 'Test User',
               username: 'testuser',
               emailAddress: 'test@example.com',
-              createdAt: '2024-01-01T00:00:00Z',
+              createdAt: DateTime.parse('2024-01-01T00:00:00Z'),
             ),
           );
 
@@ -191,11 +191,11 @@ void main() {
       // Set user - logged in
       container.read(currentUserProvider.notifier).setUser(
             User(
-              userId: 'test123',
+              id: 'test123',
               fullName: 'Test User',
               username: 'testuser',
               emailAddress: 'test@example.com',
-              createdAt: '2024-01-01T00:00:00Z',
+              createdAt: DateTime.parse('2024-01-01T00:00:00Z'),
             ),
           );
 

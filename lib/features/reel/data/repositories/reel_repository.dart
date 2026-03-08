@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:sociaanet/core/errors/failures.dart';
+import 'package:sociaanet/core/error/failures.dart';
 import 'package:sociaanet/core/models/reel_model.dart';
 import 'package:sociaanet/features/reel/data/datasources/reel_datasource.dart';
 
@@ -21,7 +21,7 @@ class ReelRepository {
         'pagination': data['pagination'],
       });
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -38,7 +38,7 @@ class ReelRepository {
       );
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -47,7 +47,7 @@ class ReelRepository {
       final data = await _datasource.getReel(reelId);
       return Right(Reel.fromJson(data['reel'] ?? data));
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -56,7 +56,7 @@ class ReelRepository {
       await _datasource.updateReelVisibility(reelId, visibility);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -65,7 +65,7 @@ class ReelRepository {
       await _datasource.recordView(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -74,7 +74,7 @@ class ReelRepository {
       await _datasource.likeReel(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -83,7 +83,7 @@ class ReelRepository {
       await _datasource.unlikeReel(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -92,7 +92,7 @@ class ReelRepository {
       await _datasource.repostReel(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -101,7 +101,7 @@ class ReelRepository {
       await _datasource.unrepostReel(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -110,7 +110,7 @@ class ReelRepository {
       await _datasource.saveReel(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 
@@ -119,7 +119,7 @@ class ReelRepository {
       await _datasource.unsaveReel(reelId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }
